@@ -12,6 +12,7 @@ public class Rooms {
     private Rooms nextRoom;
     private Rooms previousRoom;
     private RawImage backgroundPicture;
+    private Rooms specialRoom;
     /// <summary>
     /// roomName just a generic name, roomBackground has to be a picture from Assets folder!
     /// </summary>
@@ -40,6 +41,8 @@ public class Rooms {
         get { return this.previousRoom; }
         set { this.previousRoom = value; }
     }
+
+
     /// <summary>
     /// return generic roomName
     /// </summary>
