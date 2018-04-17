@@ -55,11 +55,11 @@ public class Cheats {
         cheats.blocksRaycasts = false;
     }
     /// <summary>
-    /// adds a minute to the timer if we ever implement a timer
+    /// adds a minute to the timer
     /// </summary>
     private void AddMinuteOnClick()
     {
-        //timer = timer+60seconds
+        GameController.TimeLeft += 60;
     }
     /// <summary>
     /// doubles characters speed

@@ -2,12 +2,10 @@
 using System.Collections;
 using System.Threading;
 /// <summary>
-/// Handles character movements and the sprite
+/// Handles character movements and the sprite, plays footstep sounds
 /// </summary>
 public class MainController : MonoBehaviour
 {
-
-
     Rigidbody2D mCharacter;
     SpriteRenderer character;
     Audio sound;
@@ -104,13 +102,13 @@ public class MainController : MonoBehaviour
         }
         */
         //detect room change and flip the sprite facing the right way, if this breaks use the one above
-        if(mCharacter.position.x == 295 && posXhistory < 0)
+        if(mCharacter.position.x == 280 && posXhistory < 0)
         {
             character.flipX = true;
             Debug.Log("room changed left");
         }
 
-        if(mCharacter.position.x == -295 && posXhistory > 0)
+        if(mCharacter.position.x == -280 && posXhistory > 0)
         {
             character.flipX = false;
             Debug.Log("room changed right");

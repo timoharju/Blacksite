@@ -55,6 +55,7 @@ public class ConsoleInput {
         if(state == 0)
         {
             GotoMouse.MenuOpen = true;
+            FPSDisplay.Showfps = true; //show fps counter while console is open
             consoleCanvasGroup.alpha = 1f;
             consoleCanvasGroup.interactable = true;
             state = 1;
@@ -62,6 +63,7 @@ public class ConsoleInput {
         else
         {
             GotoMouse.MenuOpen = false;
+            FPSDisplay.Showfps = false;
             consoleCanvasGroup.alpha = 0f;
             consoleCanvasGroup.interactable = false;
             state = 0;
