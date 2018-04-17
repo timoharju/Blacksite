@@ -41,18 +41,18 @@ public class Player  {
         get { return roomList[0]; }
     }
     /// <summary>
-    /// set player to another room
+    /// set player to another room and adjust scale
     /// </summary>
     /// <param name="room"></param>
     public void SetLocation(Rooms room)
     {
         if(room.RoomName != "start")
         {
-            SetScale(100);
+            SetScale(50);
         }
         else
         {
-            SetScale(150);
+            SetScale(75);
         }
         room.SetActiveRoom(room);
         Location = room;
