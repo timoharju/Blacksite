@@ -42,16 +42,17 @@ public class GameController : MonoBehaviour
     private Button clogCleaner;
     private Button yellowkey;
 
-    private bool use = false;
+    private bool use = false; //use key
     private bool loop = false;//f2 menu loop
     private bool inventoryOpen = false;
     private bool sewersFirstEntry = true; //used to move the character to the right spot when entering sewers
     private bool usedClog = false; //check if the player has used clog remover on the toilet
     private bool pipeGameTextEvent1 = true; //text event flags for sewers & pipegame, so they won't loop forever
-    private bool pipeGameTextEvent2 = true;
-    private bool firstFlush = true;
-    private bool hasClogcleaner = false;
-    private bool hasYellowkey = false;
+    private bool pipeGameTextEvent2 = true; 
+    private bool firstFlush = true; //used in start room events
+    private bool hasClogcleaner = false; //check if player has clog cleaner item in inventory
+    private bool hasYellowkey = false; //check if player has this key in inventory
+    private bool hasBluekey = false;
 
     List<GameObject> colliderList;
     GameObject room1;
@@ -107,6 +108,7 @@ public class GameController : MonoBehaviour
         colliderList.Add(room8 = GameObject.Find("Room8"));
         colliderList.Add(room9 = GameObject.Find("Room9"));
         
+        //turn all room colliders off by default, activate when inside a given room
         foreach(GameObject obj in colliderList)
         {
             obj.SetActive(false);
@@ -162,13 +164,13 @@ public class GameController : MonoBehaviour
 
         // room positions for character
         startPos = new Vector3(-150, -54, 100);     
-        nextRoomPos = new Vector3(-295, -54, 100);  
-        returnPos = new Vector3(295, -54, 100);     
+        nextRoomPos = new Vector3(-280, -54, 100);  
+        returnPos = new Vector3(280, -54, 100);     
 
 
 
         //player.Position = startPos; // set player starting position
-        player.SetScale(150); //set player default scale
+        player.SetScale(75); //set player default scale
         player.SetLocation(rooms[0]); //set player starting location
 
     }
@@ -200,7 +202,6 @@ public class GameController : MonoBehaviour
         //check if player is in the exit room (fourth room)
         else if(player.LocationName == "exitRoom")
         {
-            
             ExitRoomTriggers();
         }
         
@@ -237,6 +238,8 @@ public class GameController : MonoBehaviour
     void OnTriggerExit2D()
     {
         use = false;
+        //important line, used in ArtificialBoundaries, if there is no next/previous room, don't let the player walk off the screen
+        colliderName = "";
     }
 
     /// <summary>
@@ -302,7 +305,7 @@ public class GameController : MonoBehaviour
             player.Position = new Vector3(3, mCharacter.position.y, 100);
         }
 
-        player.SetLocation(player.PreviousLocation);
+        player.SetLocation(player.Location.SpecialRoom);
     }
 
     /// <summary>
@@ -326,23 +329,30 @@ public class GameController : MonoBehaviour
         }
 
         //config special case rooms
+        //room index is always room N - 1
 
         //room 5, next room is room 7 "maintenace room" and vice versa
         rooms[4].NextRoom = rooms[6];
         rooms[6].PreviousRoom = rooms[4];
 
-        //room 6 "control room" doesn't have a next room, only the previous one, "security door"
+        //room 6 "control room" doesn't have a next or previous room, only special room, "security door"
         rooms[5].NextRoom = null;
+        rooms[5].PreviousRoom = null;
+        rooms[5].SpecialRoom = rooms[4];
 
         //room 7 "maintenance room" has 2 next rooms, sort of, it has two enterances
         rooms[6].NextRoom = null;
 
-        //cleaning closet only has a previous room, "maintenance room"
+        //cleaning closet and sewers don't have next or previous room, only special rooms
         rooms[7].NextRoom = null;
+        rooms[7].PreviousRoom = null;
+        rooms[8].NextRoom = null;
+        rooms[8].PreviousRoom = null;
+
 
         //set special room for cleaning closet and sewer
-        rooms[7].PreviousRoom = rooms[6];
-        rooms[8].PreviousRoom = rooms[6];
+        rooms[7].SpecialRoom = rooms[6];
+        rooms[8].SpecialRoom = rooms[6];
     }
 
     
@@ -436,6 +446,11 @@ public class GameController : MonoBehaviour
             inventory.AddItem(itemKeyBlue);
             inventory.AddItem(itemKeyYellow);
         }
+
+        if (Input.GetKeyDown("f5"))
+        {
+            usedClog = true;
+        }
         
     }
 
@@ -445,7 +460,7 @@ public class GameController : MonoBehaviour
     private void CheckRoomSwitch()
     {
         //enter previous room if you are at the left side of the screen
-        if (mCharacter.position.x <= -305)
+        if (colliderName == "RoomSwitchLeft")
         {
             GotoMouse.Move = false;//set click to move loop to false;
 
@@ -453,11 +468,12 @@ public class GameController : MonoBehaviour
             {
                 player.Position = returnPos; //sprite position in the room
                 player.SetLocation(player.PreviousLocation); //actual room location
+                colliderName = ""; //clear colliderName so you don't warp multiple rooms, Update and OnCollide functions run at diffirent times, so this is very important
             }
         }
 
         //enter next room if you are at the right side of the screen
-        if (mCharacter.position.x >= 305)
+        if (colliderName == "RoomSwitchRight")
         {
             GotoMouse.Move = false;//set click to move loop to false
 
@@ -465,6 +481,7 @@ public class GameController : MonoBehaviour
             {
                 player.Position = nextRoomPos;//sprite position in the room
                 player.SetLocation(player.NextLocation);//actual room location
+                colliderName = ""; //clear colliderName so you don't warp multiple rooms, Update and OnCollide functions run at diffirent times, so this is very important
             }
         }
     }
@@ -474,22 +491,22 @@ public class GameController : MonoBehaviour
     /// </summary>
     private void ArtificialBoundaries()
     {
-        //exclude sewers, special case room - see SewerFunctions()
+        //exclude sewers, special case room - see SpecialRoomBoundaries()
         if (!(player.LocationName == "sewers"))
         {
-            if (player.Location.NextRoom == null && mCharacter.position.x > 300)
+            if (player.Location.NextRoom == null && colliderName == "RoomSwitchRight")
             {
                 GotoMouse.Move = false;
-                player.Position = new Vector3(299, -54, 100);
-                scrollText.Text = "I can't go that way";
+                player.Position = new Vector3(280, -54, 100);
+                scrollText.Text = "I can't go that way.";
                 scrollText.StartScrolling();
             }
 
-            if (player.Location.PreviousRoom == null && mCharacter.position.x < -300)
+            if (player.Location.PreviousRoom == null && colliderName == "RoomSwitchLeft")
             {
                 GotoMouse.Move = false;
-                player.Position = new Vector3(-299, -54, 100);
-                scrollText.Text = "I can't go that way";
+                player.Position = new Vector3(-280, -54, 100);
+                scrollText.Text = "I can't go that way.";
                 scrollText.StartScrolling();
             }
         }
@@ -546,16 +563,8 @@ public class GameController : MonoBehaviour
         if (player.Location.RoomName == "securityDoor")
         {
             sound.ControlRoomAudio();
-        }
-    
-        
-        
-        if (player.Location.RoomName == "largeCellRoom")
-        {
-
-            sound.PrisoncellDoorAudio();
-            
-        }
+        }       
+       
         sound.stopAudio();
 
     }
@@ -641,7 +650,7 @@ public class GameController : MonoBehaviour
         //see if you want to leave (use stairs)
         if(colliderName == "Room9Stairs" && use)
         {
-            player.SetLocation(player.PreviousLocation);
+            player.SetLocation(player.Location.SpecialRoom);
             use = false;
             player.Position = new Vector3(200, -54, 100);
         }
@@ -667,11 +676,33 @@ public class GameController : MonoBehaviour
     {
         if (player.LocationName == "sewers")
         {
+            List<Item> items = inventory.GetItems();
+            foreach(Item item in items)
+            {
+                if(item.Name == "keyBlue")
+                {
+                    hasBluekey = true;
+                }
+            }
+
             //position the character slightly lower if you just entered
             if (sewersFirstEntry)
             {
                 player.Position = new Vector3(-195, -102, 100);
                 sewersFirstEntry = false;
+            }
+
+            //if player has used clog cleaner but they dont have the key in their inventory, show the key
+            if (usedClog && hasBluekey == false)
+            {
+                key1Sewer.alpha = 1f;
+            }
+            
+            
+            //if player has the key in their inventory already, hide the key
+            if (hasBluekey)
+            {
+                key1Sewer.alpha = 0f;
             }
             
 
@@ -684,35 +715,40 @@ public class GameController : MonoBehaviour
                 pipegame.SetUninteractable();
             }
         }
-        else
+        else //if player is not in the sewers
         {
             pipegame.CloseGame();
             sewersFirstEntry = true; //set first entry back to true when you leave
+            key1Sewer.alpha = 0f;
         }
 
         //dialogue stuff after you complete the game
         if (Player.PipegameSolved == true)
         {
-            //has player used clog remover?
-            if (usedClog)
+            if (player.LocationName == "sewers")
             {
-                // see if the text event has triggered already
-                if (pipeGameTextEvent1)
+
+                //has player used clog remover?
+                if (usedClog)
                 {
-                    scrollText.Text = "That's the key from my cell!";
-                    scrollText.StartScrolling();
-                    pipeGameTextEvent1 = false;
-                    key1Sewer.alpha = 1f;
+                    // see if the text event has triggered already
+                    if (pipeGameTextEvent1)
+                    {
+                        scrollText.Text = "That's the key from my cell!";
+                        scrollText.StartScrolling();
+                        pipeGameTextEvent1 = false;
+
+                    }
                 }
-            }
-            else
-            {
-                //see if the text event has triggered already
-                if (pipeGameTextEvent2)
+                else //if player hasnt used clog remover
                 {
-                    scrollText.Text = "I think the pipes are clogged, nothing is coming out.";
-                    scrollText.StartScrolling();
-                    pipeGameTextEvent2 = false;
+                    //see if the text event has triggered already
+                    if (pipeGameTextEvent2)
+                    {
+                        scrollText.Text = "I think the pipes are clogged, nothing is coming out.";
+                        scrollText.StartScrolling();
+                        pipeGameTextEvent2 = false;
+                    }
                 }
             }
         }
@@ -833,7 +869,7 @@ public class GameController : MonoBehaviour
             {
                 if (keyCount == 0)
                 {
-                    scrollText.Text = "The door is locked, there are two keyholes";
+                    scrollText.Text = "The door is locked, there are two keyholes.";
                     scrollText.StartScrolling();
                 }
                 else if(keyCount == 1)
@@ -843,7 +879,6 @@ public class GameController : MonoBehaviour
                 }
                 else if(keyCount == 2)
                 {
-                    Debug.Log("you win the game!");
                     SceneManager.LoadSceneAsync("Credits");
                 }
             }
@@ -884,7 +919,7 @@ public class GameController : MonoBehaviour
                     hasClogcleaner = true;
                 }
 
-                if(item.Name == "item_key")
+                if(item.Name == "keyYellow")
                 {
                     hasYellowkey = true;
                 }
@@ -912,7 +947,7 @@ public class GameController : MonoBehaviour
             //special case room, disable character here
             mCharacter.gameObject.SetActive(false);
         }
-        else
+        else //if the player is not in the cleaning closet
         {
             clogCleaner.gameObject.SetActive(false);
             yellowkey.gameObject.SetActive(false);
@@ -937,7 +972,7 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// enable room specific colliders
+    /// enable/disable room specific colliders based on your location
     /// </summary>
     private void EnableColliders()
     {
@@ -978,39 +1013,29 @@ public class GameController : MonoBehaviour
         check = (player.LocationName == "sewers") ? true : false;
         colliderList[8].SetActive(check);
     }
-
+    
     /// <summary>
-    /// create boundaries for special rooms
+    /// create boundaries for some special rooms
     /// </summary>
     private void SpecialRoomBoundaries()
     {
-        //create artificial boundaries for sewer room
+        //create artificial boundaries for sewer room, the character is placed lower on the screen here, that's why it's excluded from the normal ArtificialBoundaries() method
         if(player.LocationName == "sewers")
         {
             //don't let the character go out of bounds
-            if (mCharacter.position.x > 300)
+            if (colliderName == "RoomSwitchRight")
             {
                 GotoMouse.Move = false;
-                player.Position = new Vector3(299, -102, 100);
+                player.Position = new Vector3(280, -102, 100); //normal y value -54
             }
             //don't let the character go out of bounds
-            if (mCharacter.position.x < -300)
+            if (colliderName == "RoomSwitchLeft")
             {
                 GotoMouse.Move = false;
-                player.Position = new Vector3(-299, -102, 100);
-            }
-        }
-
-        //dont let character exit the normal way in controlRoom
-        if(player.LocationName == "controlRoom")
-        {
-            if (mCharacter.position.x < -295)
-            {
-                GotoMouse.Move = false;
-                player.Position = new Vector3(-290, -54, 100);
-                scrollText.Text = "I can't go that way";
-                scrollText.StartScrolling();
+                player.Position = new Vector3(-280, -102, 100);
             }
         }
     }
+    
 }
+

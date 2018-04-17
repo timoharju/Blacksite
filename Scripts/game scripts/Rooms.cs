@@ -42,6 +42,11 @@ public class Rooms {
         set { this.previousRoom = value; }
     }
 
+    public Rooms SpecialRoom
+    {
+        get { return this.specialRoom; }
+        set { this.specialRoom = value; }
+    }
 
     /// <summary>
     /// return generic roomName

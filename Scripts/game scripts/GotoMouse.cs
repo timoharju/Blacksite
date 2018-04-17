@@ -52,7 +52,8 @@ public class GotoMouse : MonoBehaviour
             //target.z = transform.position.z;
 
             transform.position = Vector3.MoveTowards(transform.position, targetX, clickToMoveSpeed * Time.deltaTime); //move towards x position of mouse location, y and z stay the same
-            if (transform.position.x == goal)
+            //check if the player is reasonably close to the goal
+            if (transform.position.x <= goal+0.5 && transform.position.x >= goal-0.5)
             {
                 Move = false;
                 Debug.Log("I made it");

@@ -68,7 +68,7 @@ public class MainController : MonoBehaviour
             //check if prisoner is idle => not animating
             if(character.sprite.name == "prisoner_idle")
             {
-                anim.Play("runLeft", -1, 0f);
+                anim.Play("walking", -1, 0f);
             }
             
             character.flipX = false;
@@ -78,11 +78,17 @@ public class MainController : MonoBehaviour
         {
             if (character.sprite.name == "prisoner_idle")
             {
-                anim.Play("runLeft", -1, 0f);
+                anim.Play("walking", -1, 0f);
             }
+
 
             character.flipX = true;
             sound.FootstepAudio();
+        }
+        //go back to idle if the player is not moving
+        if(GotoMouse.Move == false)
+        {
+            anim.Play("idle", -1, 0f);
         }
         /*
         //"detect" room change and flip the sprite facing the right way -- the version below is much more smooth, but it can break I think
