@@ -10,9 +10,9 @@ public class Player  {
     private Rooms location;
     private List<Rooms> roomList;
     private Rigidbody2D mCharacter;
-    private static bool keypadSolved = false;
-    private static bool lightsoutSolved = false; //minigame conditions
-    private static bool pipegameSolved = false;
+    private static bool keypadSolved;
+    private static bool lightsoutSolved; //minigame conditions
+    private static bool pipegameSolved;
     
 
     /// <summary>
@@ -24,6 +24,9 @@ public class Player  {
         this.roomList = roomList;
         this.location = roomList[0];
         this.mCharacter = mCharacter;
+        keypadSolved = false;
+        lightsoutSolved = false;
+        pipegameSolved = false;
     }
     /// <summary>
     /// current location

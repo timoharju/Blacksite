@@ -17,6 +17,7 @@ public class LightsoffGame {
     private Image buttonSprite;
     private Audio sound;
     private bool solved = false;
+    private Button closeButton;
     
 
 
@@ -28,11 +29,13 @@ public class LightsoffGame {
         sound = new Audio();
         buttons = new List<Button>();
         lightsoffCanvas = GameObject.Find("LightsoffCanvas").GetComponent<CanvasGroup>();
+        closeButton = GameObject.Find("LightsoffCloseButton").GetComponent<Button>();
         buttonRed = Resources.Load<Sprite>("button_red");
         buttonYellow = Resources.Load<Sprite>("button_yellow");
         buttonGreen = Resources.Load<Sprite>("button_green");
         adjacentList = new List<AdjacentButtons>();
 
+        closeButton.onClick.AddListener(() => HideGame());
 
         //put all the buttons into List called buttons
         GetButtons();
@@ -299,12 +302,20 @@ public class LightsoffGame {
         lightsoffCanvas.blocksRaycasts = true;
     }
 
+    /// <summary>
+    /// return game solved status
+    /// </summary>
     public bool Solved
     {
         get { return this.solved; }
         set { this.solved = value; }
     }
 
+    /// <summary>
+    /// add a delay for closing the game window
+    /// </summary>
+    /// <param name="sec"></param>
+    /// <returns></returns>
     public IEnumerator WaitForSecs(float sec)
     {
         yield return new WaitForSeconds(sec);

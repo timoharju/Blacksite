@@ -14,11 +14,12 @@ public class GotoMouse : MonoBehaviour
     private static bool menuOpen = false;    //are there any menus open
     Ray ray;
     RaycastHit hit;
-    public static int numberOfClicks = 0;//track number of clicks
+    public static int numberOfClicks;//track number of clicks
 
     void Start()
     {
         target = transform.position;
+        numberOfClicks = 0;
     }
 
     void Update()

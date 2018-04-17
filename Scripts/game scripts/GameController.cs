@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour
     private Renderer specialRoomExitRend;
     private Button clogCleaner;
     private Button yellowkey;
+    private Text timerText;
 
     private bool use = false; //use key
     private bool loop = false;//f2 menu loop
@@ -54,6 +55,9 @@ public class GameController : MonoBehaviour
     private bool hasYellowkey = false; //check if player has this key in inventory
     private bool hasBluekey = false;
 
+    //timer, if it reaches zero, game over
+    public static float TimeLeft { get; set; }
+
     List<GameObject> colliderList;
     GameObject room1;
     GameObject room2;
@@ -66,9 +70,7 @@ public class GameController : MonoBehaviour
     GameObject room9;
 
     //inventory & item stuff
-    RawImage itemSlot1;
-    RawImage itemSlot2;
-    RawImage itemSlot3;
+
     Item itemKeyYellow;
     Item itemKeyBlue;
     Item itemClogcleaner;
@@ -78,6 +80,9 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //set timer
+        TimeLeft = 480f;
+
         //android settings
         Screen.orientation = ScreenOrientation.LandscapeLeft;
         //find game objects
@@ -87,14 +92,13 @@ public class GameController : MonoBehaviour
         positionText = GameObject.Find("PositionText").GetComponent<Text>();
         dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
         inventoryButton = GameObject.Find("InventoryButton").GetComponent<Button>();
-        itemSlot1 = GameObject.Find("ItemSlot1").GetComponent<RawImage>();
-        itemSlot2 = GameObject.Find("ItemSlot2").GetComponent<RawImage>();
-        itemSlot3 = GameObject.Find("ItemSlot3").GetComponent<RawImage>();
+
         key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
         key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
         specialRoomExit = GameObject.Find("SpecialRoomExitButton").GetComponent<Button>();
         clogCleaner = GameObject.Find("ClogCleaner").GetComponent<Button>();
         yellowkey = GameObject.Find("YellowKey").GetComponent<Button>();
+        timerText = GameObject.Find("TimerText").GetComponent<Text>();
 
         colliderList = new List<GameObject>();
 
@@ -143,9 +147,9 @@ public class GameController : MonoBehaviour
         //send the games to ConsoleInput for the toggle commands
         consoleInput = new ConsoleInput(lightsoffGame, pipegame);
         
-        itemKeyYellow = new Item("keyYellow", "item_key", itemSlot1);
-        itemClogcleaner = new Item("clogcleaner", "clog_cleaner", itemSlot2);
-        itemKeyBlue = new Item("keyBlue", "item_key2", itemSlot3);
+        itemKeyYellow = new Item("keyYellow", "item_key");
+        itemClogcleaner = new Item("clogcleaner", "clog_cleaner");
+        itemKeyBlue = new Item("keyBlue", "item_key2");
 
         //create rooms and add to list
         CreateRooms();
@@ -165,9 +169,9 @@ public class GameController : MonoBehaviour
         // room positions for character
         startPos = new Vector3(-150, -54, 100);     
         nextRoomPos = new Vector3(-280, -54, 100);  
-        returnPos = new Vector3(280, -54, 100);     
+        returnPos = new Vector3(280, -54, 100);
 
-
+        
 
         //player.Position = startPos; // set player starting position
         player.SetScale(75); //set player default scale
@@ -359,7 +363,15 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //timer stuff
+        timerText.text = "" + (int)TimeLeft;
+        TimeLeft -= Time.deltaTime;
+        if(TimeLeft <= 0)
+        {
+            SceneManager.LoadSceneAsync("GameOver");
+        }
+
+
         //debugging key commands
         CheckDebuggingKeyCommands();
 
@@ -382,6 +394,10 @@ public class GameController : MonoBehaviour
             positionCanvas.alpha = 1f; //set info textfield visible and print players coordinates
             //display player position, click to move loop statuses and if you have solved minigames or not
             positionText.text = "" + player.Position + GotoMouse.Move + GotoMouse.MenuOpen + "\nKeypad: " + Player.KeypadSolved + "\nLightsout: " + Player.LightsoutSolved + "\nPipegame: " + Player.PipegameSolved + "\nclicks: " + GotoMouse.numberOfClicks + "\nUse: " + use + "\nColl: " + colliderName + "\nLoc: " + player.LocationName;
+        }
+        else
+        {
+            positionCanvas.alpha = 0f;
         }
 
         //check if we need to change the room, based on character coordinates
@@ -413,10 +429,6 @@ public class GameController : MonoBehaviour
 
         //dont let the character go out of bounds in special rooms
         SpecialRoomBoundaries();
-
-        
-
-        //use = false; //leave as last entry, toggle use off if you didn't actually use anything
     }
     /// <summary>
     /// check if you are pressing any of the function keys
@@ -430,7 +442,9 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown("f2"))
         {
-            loop = true; // used by position textfield loop
+            //same as if loop == true, loop = false - else loop = true
+            bool change = (loop) ? false : true;
+            loop = change; // used by position textfield loop
         }
 
         if (Input.GetKeyDown("f3"))
@@ -450,6 +464,19 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown("f5"))
         {
             usedClog = true;
+        }
+
+        if (Input.GetKeyDown("f6"))
+        {
+            inventory.RemoveItem(itemClogcleaner);
+            inventory.RemoveItem(itemKeyBlue);
+            inventory.RemoveItem(itemKeyYellow);
+        }
+
+        if (Input.GetKeyDown("f7"))
+        {
+            inventory.AddItem(itemClogcleaner);
+            inventory.AddItem(itemKeyBlue);
         }
         
     }
@@ -693,7 +720,7 @@ public class GameController : MonoBehaviour
             }
 
             //if player has used clog cleaner but they dont have the key in their inventory, show the key
-            if (usedClog && hasBluekey == false)
+            if (usedClog && !hasBluekey && Player.PipegameSolved)
             {
                 key1Sewer.alpha = 1f;
             }

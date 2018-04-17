@@ -4,58 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
 /// <summary>
-/// create items
+/// Create items for your inventory
 /// </summary>
 public class Item {
 
-    private string name;
-    private string imageLocation;
-    private string imageLocationHistory;
-    private RawImage itemSlot;
+    /// <summary>
+    /// Get/Set the item name
+    /// </summary>
+    public string Name { get; set; }
+    /// <summary>
+    /// Get/Set items image location, path to the image in the Resources folder
+    /// </summary>
+    public string Image { get; set; }
     
     /// <summary>
     /// give items a name and sprite to use
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="imageLocation"></param>
-    public Item(string name, string imageLocation, RawImage itemSlot)
+    /// <param name="name">Name of the item.</param>
+    /// <param name="imageLocation">Path to the image in resources folder</param>
+    public Item(string name, string imageLocation)
     {
-        this.name = name;
-        this.imageLocation = imageLocation;
-        imageLocationHistory = imageLocation;
-        this.itemSlot = itemSlot;
-        Image = "transparent"; //hide items by default
-        SetImage();
+        Name = name;
+        Image = imageLocation;
     }
-    /// <summary>
-    /// return item name
-    /// </summary>
-    public string Name
-    {
-        get { return this.name; }
-    }
-    /// <summary>
-    /// return item image
-    /// </summary>
-    public string Image
-    {
-        get { return this.imageLocation; }
-        set { this.imageLocation = value; }
-    }
-    /// <summary>
-    /// sets items image visible again, used if you set the image to transparent to update inventory screen
-    /// </summary>
-    public void RestoreImage()
-    {
-        Image = imageLocationHistory;
-        SetImage();//update inventory screen
-    }
-    /// <summary>
-    /// call this to update item image in inventory screen
-    /// </summary>
-    public void SetImage()
-    {
-        itemSlot.texture = (Texture)Resources.Load(imageLocation, typeof(Texture));
 
-    }
 }
