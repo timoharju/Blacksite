@@ -149,12 +149,13 @@ public class LightsoffGame {
         int i = 0;
         foreach(Button btn in buttons)
         {
+            //create object of the helper class
+            //adjacentbuttons keeps a list of all the adjacent buttons you add to with SetAdjacentButton
             AdjacentButtons toList = new AdjacentButtons();
             
-            //toList.SetParentButton(btn);
             
             
-            //horizontal adjecents
+            //horizontal adjacents
 
             //first row, directly below buttons
             //first row doesnt have anything above it so we can only do i+5

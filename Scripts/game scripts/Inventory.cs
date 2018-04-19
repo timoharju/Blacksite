@@ -13,7 +13,9 @@ public class Inventory {
     private RawImage itemSlot1;
     private RawImage itemSlot2;
     private RawImage itemSlot3;
+    private RawImage itemSlot4;
     private List<RawImage> itemSlots;
+    private GameObject paperUnfold;
 
     
     /// <summary>
@@ -24,16 +26,26 @@ public class Inventory {
 
         itemList = new List<Item>();
         inventoryCanvas = GameObject.Find("InventoryCanvas").GetComponent<CanvasGroup>();
+        paperUnfold = GameObject.Find("PaperUnfold");
+        //hide unfolded paper screen
+        //if this line gives you errors make sure the PaperUnfold -is active- when you start the game!! (otherwise it can't find the object)
+        paperUnfold.SetActive(false);
 
         itemSlots = new List<RawImage>();
         itemSlots.Add(itemSlot1 = GameObject.Find("ItemSlot1").GetComponent<RawImage>());
         itemSlots.Add(itemSlot2 = GameObject.Find("ItemSlot2").GetComponent<RawImage>());
         itemSlots.Add(itemSlot3 = GameObject.Find("ItemSlot3").GetComponent<RawImage>());
+        itemSlots.Add(itemSlot4 = GameObject.Find("ItemSlot4").GetComponent<RawImage>());
 
         inventoryCanvas.alpha = 0f;
         inventoryCanvas.interactable = false;
         inventoryCanvas.blocksRaycasts = false;
 
+        //add button listeners to all itemslots
+        foreach(RawImage slot in itemSlots)
+        {
+            slot.GetComponent<Button>().onClick.AddListener(() => ItemClick(slot.GetComponent<Button>()));
+        }
        
     }
     /// <summary>
@@ -83,6 +95,8 @@ public class Inventory {
         inventoryCanvas.alpha = 0f;
         inventoryCanvas.interactable = false;
         inventoryCanvas.blocksRaycasts = false;
+        //hide the paper when you close the inventory
+        paperUnfold.SetActive(false);
     }
 
     /// <summary>
@@ -111,6 +125,20 @@ public class Inventory {
                 slot.texture = (Texture)Resources.Load(itemList[i].Image, typeof(Texture));
             }
             i++;
+        }
+    }
+
+    /// <summary>
+    /// every item slot has a button, but we only care about the paper_fold button right now
+    /// but since it could be anywhere add listeners to all item slots, and let's find the paper fold by texture name
+    /// </summary>
+    /// <param name="button"></param>
+    private void ItemClick(Button button)
+    {
+        //get the buttons RawImage texture name... yeah not very elegant
+        if(button.gameObject.GetComponent<RawImage>().texture.name == "paper_fold")
+        {
+            paperUnfold.SetActive(true);
         }
     }
 }

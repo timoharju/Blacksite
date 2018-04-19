@@ -35,6 +35,7 @@ public class Startmenu : MonoBehaviour {
         closeInstructions.onClick.AddListener(() => CloseInstructions());
 
         loadingCanvas.alpha = 0f;
+        CloseInstructions();
         
 	}
 	

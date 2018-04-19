@@ -21,6 +21,17 @@ public class Audio
     AudioSource audioControlRoom;
     AudioSource audioToiletFlush;
     AudioSource audioElectricDoorOpen;
+    AudioSource audioMumble1;
+    AudioSource audioMumble2;
+    AudioSource audioMumble3;
+    AudioSource audioMumble4;
+    AudioSource audioBlop;
+    AudioSource audioAlienCreepy1;
+    AudioSource audioAlienCreepy2;
+    AudioSource audioAlienCreepy3;
+    AudioSource audioObjectDropWater;
+    AudioSource audioPaperCrumble;
+    AudioSource audioNormalDoorOpen;
 
     //checks if the audio has played
     bool hasPlayed = false;
@@ -46,6 +57,18 @@ public class Audio
         audioControlRoom = GameObject.Find("ControlRoom").GetComponent<AudioSource>();
         audioToiletFlush = GameObject.Find("ToiletFlush").GetComponent<AudioSource>();
         audioElectricDoorOpen = GameObject.Find("ElectricDoorOpen").GetComponent<AudioSource>();
+        audioMumble1 = GameObject.Find("Mumble1").GetComponent<AudioSource>();
+        audioMumble2 = GameObject.Find("Mumble2").GetComponent<AudioSource>();
+        audioMumble3 = GameObject.Find("Mumble3").GetComponent<AudioSource>();
+        audioMumble4 = GameObject.Find("Mumble4").GetComponent<AudioSource>();
+        audioBlop = GameObject.Find("Blop").GetComponent<AudioSource>();
+        audioAlienCreepy1 = GameObject.Find("Aliencreepy1").GetComponent<AudioSource>();
+        audioAlienCreepy2 = GameObject.Find("Aliencreepy2").GetComponent<AudioSource>();
+        audioAlienCreepy3 = GameObject.Find("Aliencreepy3").GetComponent<AudioSource>();
+        audioObjectDropWater = GameObject.Find("ObjectDropWater").GetComponent<AudioSource>();
+        audioPaperCrumble = GameObject.Find("PaperCrumble").GetComponent<AudioSource>();
+        audioNormalDoorOpen = GameObject.Find("NormalDoorOpen").GetComponent<AudioSource>();
+
     }
     public Audio()
     {
@@ -65,6 +88,17 @@ public class Audio
         audioControlRoom = GameObject.Find("ControlRoom").GetComponent<AudioSource>();
         audioToiletFlush = GameObject.Find("ToiletFlush").GetComponent<AudioSource>();
         audioElectricDoorOpen = GameObject.Find("ElectricDoorOpen").GetComponent<AudioSource>();
+        audioMumble1 = GameObject.Find("Mumble1").GetComponent<AudioSource>();
+        audioMumble2 = GameObject.Find("Mumble2").GetComponent<AudioSource>();
+        audioMumble3 = GameObject.Find("Mumble3").GetComponent<AudioSource>();
+        audioMumble4 = GameObject.Find("Mumble4").GetComponent<AudioSource>();
+        audioBlop = GameObject.Find("Blop").GetComponent<AudioSource>();
+        audioAlienCreepy1 = GameObject.Find("Aliencreepy1").GetComponent<AudioSource>();
+        audioAlienCreepy2 = GameObject.Find("Aliencreepy2").GetComponent<AudioSource>();
+        audioAlienCreepy3 = GameObject.Find("Aliencreepy3").GetComponent<AudioSource>();
+        audioObjectDropWater = GameObject.Find("ObjectDropWater").GetComponent<AudioSource>();
+        audioPaperCrumble = GameObject.Find("PaperCrumble").GetComponent<AudioSource>();
+        audioNormalDoorOpen = GameObject.Find("NormalDoorOpen").GetComponent<AudioSource>();
     }
 
     //stops the audio
@@ -194,6 +228,106 @@ public class Audio
         if (!audioControlRoom.isPlaying)
         {
             audioControlRoom.Play();
+        }
+
+        //Mumble audio
+    }
+    public void Mumble1Audio()
+    {
+        if (!audioMumble1.isPlaying)
+        {
+            audioMumble1.Play();
+        }
+
+        //Mumble audio
+    }
+    public void Mumble2Audio()
+    {
+        if (!audioMumble1.isPlaying)
+        {
+            audioMumble2.Play();
+        }
+
+        //Mumble audio
+    }
+    public void Mumble3Audio()
+    {
+        if (!audioMumble1.isPlaying)
+        {
+            audioMumble3.Play();
+        }
+       
+        //Mumble audio
+
+    }
+    public void Mumble4Audio()
+    {
+        if (!audioMumble1.isPlaying)
+        {
+            audioMumble4.Play();
+        }
+
+
+    }
+    public void BlopAudio()
+    {
+        if (!audioMumble1.isPlaying)
+        {
+            audioBlop.Play();
+        }
+
+
+    }
+    public void AlienCreepy1Audio()
+    {
+        if (!audioAlienCreepy1.isPlaying)
+        {
+            audioAlienCreepy1.Play();
+        }
+
+
+    }
+    public void AlienCreepy2Audio()
+    {
+        if (!audioAlienCreepy2.isPlaying)
+        {
+            audioAlienCreepy2.Play();
+        }
+
+
+    }
+    public void AlienCreepy3Audio()
+    {
+        if (!audioAlienCreepy3.isPlaying)
+        {
+            audioAlienCreepy3.Play();
+        }
+
+
+    }
+    public void ObjectDropWaterAudio()
+    {
+        if (!audioObjectDropWater.isPlaying)
+        {
+            audioObjectDropWater.Play();
+        }
+
+
+    }
+    public void PaperCrumbleAudio()
+    {
+        if (!audioPaperCrumble.isPlaying)
+        {
+            audioPaperCrumble.Play();
+        }
+
+
+    }
+    public void NormalDoorOpenAudio()
+    {
+        if (!audioNormalDoorOpen.isPlaying)
+        {
+            audioNormalDoorOpen.Play();
         }
 
 
