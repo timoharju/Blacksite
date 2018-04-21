@@ -117,7 +117,6 @@ public class Audio
             audioWaterdrop.Pause();
         }
        
-
     }
       
     //Plays the audio of the Footsteps01.wav
@@ -215,10 +214,11 @@ public class Audio
     public void ElectricDoorOpenAudio()
     {
 
-        if (!audioElectricDoorOpen.isPlaying)
+        if (hasPlayed==false)
         {
             
             audioElectricDoorOpen.Play();
+            hasPlayed = true;
         }
      
     }
@@ -328,6 +328,7 @@ public class Audio
         if (!audioNormalDoorOpen.isPlaying)
         {
             audioNormalDoorOpen.Play();
+            
         }
 
 

@@ -578,7 +578,7 @@ public class GameController : MonoBehaviour
             if (Player.KeypadSolved == true)
             {
                 player.SetLocation(rooms[5]);
-                sound.ElectricDoorOpenAudio();
+                
             }
             else if (Player.KeypadSolved == false)
             {
@@ -620,8 +620,9 @@ public class GameController : MonoBehaviour
         if (player.Location.RoomName == "securityDoor")
         {
             sound.ControlRoomAudio();
-        }       
-       
+        }
+      
+
         sound.stopAudio();
 
     }
@@ -684,6 +685,7 @@ public class GameController : MonoBehaviour
             if(Player.LightsoutSolved == true)
             {
                 player.SetLocation(rooms[7]);
+                sound.NormalDoorOpenAudio();
             }
             else//if not display a dialogue
             {
@@ -698,6 +700,7 @@ public class GameController : MonoBehaviour
         {
             player.SetLocation(rooms[8]);
             use = false;
+            sound.NormalDoorOpenAudio();
         }
     }
 

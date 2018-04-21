@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,15 +15,13 @@ public class Hiscore : MonoBehaviour {
     Text yourScore;
     Button exitButton;
     int score;
-    string scoreString;
-    string tmp = "";
-    string formatedPath;
-    string path;
-    string inputName;
+    string scoreString; //string version of score
+    string formatedPath; //filepath
+    string path; //filepath
+    string inputName; //the string you input into InputField
     bool hasEntered = false;
-    List<Score> scores = new List<Score>();
-    List<Score> newScores = new List<Score>();
-    List<string> file;
+    List<Score> scores = new List<Score>(); 
+    List<string> file;  //file gets read into this
     Score p1;
     Score p2;
     Score p3;
@@ -35,7 +32,8 @@ public class Hiscore : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        score = Random.Range(1000, 1500);
+        //android settings
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
 
         p1 = new Score();
         p2 = new Score();
@@ -44,10 +42,17 @@ public class Hiscore : MonoBehaviour {
         p5 = new Score();
         p6 = new Score();
 
+        //pc version datapaths
+        /*
         path = Application.dataPath + "/scores.txt";
         formatedPath = Application.dataPath + "/hiscore.txt";
+        */
+        
+        //android version datapaths (works on pc too, %appdata%/LocalLow/DefaultCompany/Seikkailutime/hiscore.txt)
+        path = Application.persistentDataPath + "/scores.txt";
+        formatedPath = Application.persistentDataPath + "/hiscores.txt";
 
-
+        Debug.Log(formatedPath);
         hiscores = GameObject.Find("ScoreText").GetComponent<Text>();
         inp = GameObject.Find("InputField").GetComponent<InputField>();
         yourScore = GameObject.Find("YourScore").GetComponent<Text>();
@@ -58,30 +63,60 @@ public class Hiscore : MonoBehaviour {
         inp.onEndEdit.AddListener(delegate { EditEnd(); });
 
         //create files if they don't exist for whatever reason
-        if (!File.Exists(formatedPath))
-        {
-            File.Create(formatedPath);
-        }
-
+        Debug.Log(formatedPath);
+        // inp.text = formatedPath;
         if (!File.Exists(path))
         {
-            File.Create(path);
+            Debug.Log("exists");
+            using (StreamWriter w = File.AppendText(path))
+            {
+                w.WriteLine("Dummy");
+                w.WriteLine("1000");
+                w.WriteLine("Dummy");
+                w.WriteLine("1000");
+                w.WriteLine("Dummy");
+                w.WriteLine("1000");
+                w.WriteLine("Dummy");
+                w.WriteLine("1000");
+                w.WriteLine("Dummy");
+                w.WriteLine("1000");
+            }
         }
+
+        if (!File.Exists(formatedPath))
+        {
+            Debug.Log("exists");
+            using (StreamWriter w = File.AppendText(formatedPath))
+            {
+                w.WriteLine("Dummy 1000");
+                w.WriteLine("Dummy 1000");
+                w.WriteLine("Dummy 1000");
+                w.WriteLine("Dummy 1000");
+                w.WriteLine("Dummy 1000");
+            }
+        }
+        
+         
 
         //read highscores to a list
         file = new List<string>(File.ReadAllLines(path));
+
+        
         
         //add data to score objects
-        PopulateList();
+        ReadFileToScores();
 
         //display the old list
         DisplayOldList();
 
         CalculateScore();
-        yourScore.text = "Your Score: " + score;
+        
+        
+#if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+#endif
 
-        AssetDatabase.Refresh();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -94,7 +129,7 @@ public class Hiscore : MonoBehaviour {
         inp.gameObject.SetActive(check);
         
 
-	}
+    }
 
 
 
@@ -126,7 +161,7 @@ public class Hiscore : MonoBehaviour {
     /// add values to Score objects from the list
     /// make sure there is always 5 people with a score on the list (10 lines)
     /// </summary>
-    private void PopulateList()
+    private void ReadFileToScores()
     {
         
             p1.Name = file[0];
@@ -152,21 +187,19 @@ public class Hiscore : MonoBehaviour {
     /// </summary>
     private void DisplayOldList()
     {
+        
         scores.Add(p1);
         scores.Add(p2);
         scores.Add(p3);
         scores.Add(p4);
         scores.Add(p5);
+        
         scores.Sort(delegate (Score x, Score y)
         {
            return y.ScoreN.CompareTo(x.ScoreN);
         });
 
-        foreach(Score s in scores)
-        {
-            Debug.Log(s.ScoreN);
-        }
-        
+        //overwrite old list with sorted scores
         using (TextWriter tw = new StreamWriter(formatedPath))
         {
             foreach (Score s in scores)
@@ -174,7 +207,9 @@ public class Hiscore : MonoBehaviour {
                 tw.WriteLine(s.Name + " " + s.ScoreN);
             }
         }
-        AssetDatabase.Refresh();
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.Refresh();
+#endif
     }
 
     /// <summary>
@@ -186,21 +221,20 @@ public class Hiscore : MonoBehaviour {
         scores.RemoveRange(0, 5);
 
         //add updated elements
+        
         scores.Add(p1);
         scores.Add(p2);
         scores.Add(p3);
         scores.Add(p4);
         scores.Add(p5);
         scores.Add(p6);
+
         scores.Sort(delegate (Score x, Score y)
         {
             return y.ScoreN.CompareTo(x.ScoreN);
         });
 
-        foreach (Score s in scores)
-        {
-            Debug.Log(s.ScoreN);
-        }
+        
         scores.RemoveAt(5);
 
         //ovewrite formatted list
@@ -223,7 +257,9 @@ public class Hiscore : MonoBehaviour {
         }
         //update local Lists
         UpdateCache();
-        AssetDatabase.Refresh();
+#if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+#endif
     }
 
     /// <summary>
@@ -232,7 +268,7 @@ public class Hiscore : MonoBehaviour {
     private void UpdateCache()
     {
         file = new List<string>(File.ReadAllLines(path));
-        PopulateList();
+        ReadFileToScores();
     }
 
     /// <summary>
@@ -243,14 +279,27 @@ public class Hiscore : MonoBehaviour {
         int clicks = GotoMouse.numberOfClicks;
         float timeLeft = GameController.TimeLeft;
 
-        int score = (int)timeLeft * 5;
+        //score is every second left * 5 minus clicks
+        score = (int)timeLeft * 5;
         score -= clicks;
         
-        if(score < 1000)
+        //completing the game is atleast 1000 points
+        if(score < 1000 && score > 1)
         {
-            //ph for testing
             this.score = 1000;
-            //this.score = 0;
+            
+        }
+
+        //if score is 0 dont let user enter anything
+        //this happens if you click leaderboards in the menu
+        if(score == 0)
+        {
+            hasEntered = true;
+            yourScore.text = "";
+        }
+        else
+        {
+            yourScore.text = "Your Score: " + score;
         }
     }
 }

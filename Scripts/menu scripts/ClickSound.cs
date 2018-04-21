@@ -42,7 +42,7 @@ public class ClickSound : MonoBehaviour
 
 
 
-        button.onClick.AddListener(() => PlaySoud());
+        button.onClick.AddListener(() => PlaySound());
 
     }
 
@@ -50,7 +50,7 @@ public class ClickSound : MonoBehaviour
 
     // Update is called once per frame
 
-    void PlaySoud()
+    void PlaySound()
 
     {
 
