@@ -14,6 +14,7 @@ public class Startmenu : MonoBehaviour {
     CanvasGroup loadingCanvas;
     CanvasGroup instructionsCanvas;
     Button closeInstructions;
+    Button leaderBoardButton;
     
 	// Use this for initialization
 	void Start () {
@@ -26,6 +27,7 @@ public class Startmenu : MonoBehaviour {
         loadingCanvas = GameObject.Find("LoadingCanvas").GetComponent<CanvasGroup>();
         instructionsCanvas = GameObject.Find("InstructionsCanvas").GetComponent<CanvasGroup>();
         closeInstructions = GameObject.Find("CloseInstructionsButton").GetComponent<Button>();
+        leaderBoardButton = GameObject.Find("LeaderboardButton").GetComponent<Button>();
 
 
         //add listeners
@@ -33,8 +35,10 @@ public class Startmenu : MonoBehaviour {
         howtoPlayButton.onClick.AddListener(() => HowToPlay());
         quitButton.onClick.AddListener(() => QuitGame());
         closeInstructions.onClick.AddListener(() => CloseInstructions());
+        leaderBoardButton.onClick.AddListener(() => LeaderBoards());
 
         loadingCanvas.alpha = 0f;
+        CloseInstructions();
         
 	}
 	
@@ -75,5 +79,13 @@ public class Startmenu : MonoBehaviour {
         instructionsCanvas.alpha = 0f;
         instructionsCanvas.interactable = false;
         instructionsCanvas.blocksRaycasts = false;
+    }
+
+    /// <summary>
+    /// load leaderboards
+    /// </summary>
+    private void LeaderBoards()
+    {
+        SceneManager.LoadSceneAsync("HiScore");
     }
 }

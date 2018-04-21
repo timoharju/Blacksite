@@ -42,10 +42,14 @@ public class GameController : MonoBehaviour
     private Button clogCleaner;
     private Button yellowkey;
     private Text timerText;
+    private GameObject paperFold;
+    private GameObject sleepOverlay;
 
     private bool use = false; //use key
     private bool loop = false;//f2 menu loop
     private bool inventoryOpen = false;
+
+    //event flags
     private bool sewersFirstEntry = true; //used to move the character to the right spot when entering sewers
     private bool usedClog = false; //check if the player has used clog remover on the toilet
     private bool pipeGameTextEvent1 = true; //text event flags for sewers & pipegame, so they won't loop forever
@@ -54,6 +58,7 @@ public class GameController : MonoBehaviour
     private bool hasClogcleaner = false; //check if player has clog cleaner item in inventory
     private bool hasYellowkey = false; //check if player has this key in inventory
     private bool hasBluekey = false;
+    
 
     //timer, if it reaches zero, game over
     public static float TimeLeft { get; set; }
@@ -74,6 +79,7 @@ public class GameController : MonoBehaviour
     Item itemKeyYellow;
     Item itemKeyBlue;
     Item itemClogcleaner;
+    Item itemPaperFold;
 
     string colliderName;
 
@@ -93,6 +99,10 @@ public class GameController : MonoBehaviour
         dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
         inventoryButton = GameObject.Find("InventoryButton").GetComponent<Button>();
 
+        paperFold = GameObject.Find("PaperFold");
+        sleepOverlay = GameObject.Find("SleepOverlay");
+        //if this line gives errors make sure to enable SleepOverlay before you run the game!
+        sleepOverlay.SetActive(false);
         key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
         key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
         specialRoomExit = GameObject.Find("SpecialRoomExitButton").GetComponent<Button>();
@@ -150,6 +160,7 @@ public class GameController : MonoBehaviour
         itemKeyYellow = new Item("keyYellow", "item_key");
         itemClogcleaner = new Item("clogcleaner", "clog_cleaner");
         itemKeyBlue = new Item("keyBlue", "item_key2");
+        itemPaperFold = new Item("paperFold", "paper_fold");
 
         //create rooms and add to list
         CreateRooms();
@@ -201,6 +212,12 @@ public class GameController : MonoBehaviour
         else if(player.LocationName == "cellRoom")
         {
             CellRoomTriggers();
+        }
+
+        //third room
+        else if(player.LocationName == "largeCellRoom")
+        {
+            LargeCellRoomTriggers();
         }
 
         //check if player is in the exit room (fourth room)
@@ -429,6 +446,9 @@ public class GameController : MonoBehaviour
 
         //dont let the character go out of bounds in special rooms
         SpecialRoomBoundaries();
+
+        //events for the largeCellRoom
+        LargeCellRoomEvents();
     }
     /// <summary>
     /// check if you are pressing any of the function keys
@@ -459,6 +479,7 @@ public class GameController : MonoBehaviour
             inventory.AddItem(itemClogcleaner);
             inventory.AddItem(itemKeyBlue);
             inventory.AddItem(itemKeyYellow);
+            inventory.AddItem(itemPaperFold);
         }
 
         if (Input.GetKeyDown("f5"))
@@ -471,6 +492,7 @@ public class GameController : MonoBehaviour
             inventory.RemoveItem(itemClogcleaner);
             inventory.RemoveItem(itemKeyBlue);
             inventory.RemoveItem(itemKeyYellow);
+            inventory.RemoveItem(itemPaperFold);
         }
 
         if (Input.GetKeyDown("f7"))
@@ -556,7 +578,7 @@ public class GameController : MonoBehaviour
             if (Player.KeypadSolved == true)
             {
                 player.SetLocation(rooms[5]);
-                sound.ElectricDoorOpenAudio();
+                
             }
             else if (Player.KeypadSolved == false)
             {
@@ -565,6 +587,14 @@ public class GameController : MonoBehaviour
             }
 
         }
+
+        //check if player is at the window
+        if(colliderName == "Room5Window" && use)
+        {
+            scrollText.Text = "I think I can control some locks from there.";
+            scrollText.StartScrolling();
+        }
+
         use = false;
     }
 
@@ -590,8 +620,9 @@ public class GameController : MonoBehaviour
         if (player.Location.RoomName == "securityDoor")
         {
             sound.ControlRoomAudio();
-        }       
-       
+        }
+      
+
         sound.stopAudio();
 
     }
@@ -608,6 +639,9 @@ public class GameController : MonoBehaviour
             StartCoroutine(keypad.WaitForSecs(1.5f));
             scrollText.Text = "Access granted.";
             scrollText.StartScrolling();
+            //refresh room image
+            rooms[4].RoomBackground = "room5_open";
+            player.SetLocation(player.Location);
         }
 
         //check if lightsoffGame has been solved, show a dialogue
@@ -615,7 +649,7 @@ public class GameController : MonoBehaviour
         {
             lightsoffGame.Solved = false;
             StartCoroutine(lightsoffGame.WaitForSecs(1.5f));
-            scrollText.Text = "Solved lights out game(PH).";
+            scrollText.Text = "Something unlocked.";
             scrollText.StartScrolling();
         }
 
@@ -651,6 +685,7 @@ public class GameController : MonoBehaviour
             if(Player.LightsoutSolved == true)
             {
                 player.SetLocation(rooms[7]);
+                sound.NormalDoorOpenAudio();
             }
             else//if not display a dialogue
             {
@@ -665,6 +700,7 @@ public class GameController : MonoBehaviour
         {
             player.SetLocation(rooms[8]);
             use = false;
+            sound.NormalDoorOpenAudio();
         }
     }
 
@@ -871,6 +907,14 @@ public class GameController : MonoBehaviour
                 usedClog = true;
             }
         }
+
+        if(colliderName == "BedCollider" && use)
+        {
+            scrollText.Text = "I guess I could take a nap.";
+            scrollText.StartScrolling();
+            StartCoroutine(WaitForSecs(2.5f));
+        }
+
         use = false; //toggle use last
     }
 
@@ -896,7 +940,7 @@ public class GameController : MonoBehaviour
             {
                 if (keyCount == 0)
                 {
-                    scrollText.Text = "The door is locked, there are two keyholes.";
+                    scrollText.Text = "The door is locked, there are two keyholes.\nIt's my way to freedom";
                     scrollText.StartScrolling();
                 }
                 else if(keyCount == 1)
@@ -906,7 +950,7 @@ public class GameController : MonoBehaviour
                 }
                 else if(keyCount == 2)
                 {
-                    SceneManager.LoadSceneAsync("Credits");
+                    SceneManager.LoadSceneAsync("HiScore");
                 }
             }
             use = false;
@@ -922,10 +966,15 @@ public class GameController : MonoBehaviour
         //check if you are near the table and want to play lightsout
         if(colliderName == "LightsoutGame" && use)
         {
-            use = false;
             lightsoffGame.ShowGame();
         }
-        
+
+        if(colliderName == "ButtonWall" && use)
+        {
+            scrollText.Text = "I have no idea what I'm doing.";
+            scrollText.StartScrolling();
+        }
+        use = false;
     }
 
     /// <summary>
@@ -1064,5 +1113,93 @@ public class GameController : MonoBehaviour
         }
     }
     
+
+    /// <summary>
+    /// events & dialogue for large cell room
+    /// </summary>
+    private void LargeCellRoomTriggers()
+    {
+        bool hasPaper = false;
+        if (colliderName == "AlienSkeleton" && use)
+        {
+            List<Item> items = inventory.GetItems();
+            foreach(Item item in items)
+            {
+                if(item.Name == "paperFold")
+                {
+                    hasPaper = true;
+                }
+            }
+
+            //check if you have the paper in your inventory, same as using for the second time
+            if (hasPaper)
+            {
+                scrollText.Text = "The flesh has melted to a green puddle of goo.";
+                scrollText.StartScrolling();
+            }
+            else//first use
+            {
+                inventory.AddItem(itemPaperFold);
+                scrollText.Text = "There was a piece of paper in the aliens hand.";
+                scrollText.StartScrolling();
+            }
+
+            use = false;
+        }
+    }
+
+    /// <summary>
+    /// Handle largeCellRoom events, right now just enable/disable paper in aliens hand
+    /// </summary>
+    private void LargeCellRoomEvents()
+    {
+        //check if player is in largeCellRoom
+        bool checkLocation = (player.LocationName == "largeCellRoom") ? true : false;
+        bool hasPaper = false;
+        if (checkLocation)
+        {
+            List<Item> items = inventory.GetItems();
+
+            //check the inventory for paperFold
+            foreach(Item item in items)
+            {
+                if(item.Name == "paperFold")
+                {
+                    hasPaper = true;
+                }
+            }
+            //hide paper if you've already picked it up
+            paperFold.SetActive(!hasPaper);
+        }
+        else//hide paper if you are not in largeCellRoom
+        {
+            paperFold.SetActive(false);
+        }
+        
+    }
+
+    /// <summary>
+    /// Add delay between sleep overlay activations
+    /// </summary>
+    /// <param name="sec">time in seconds</param>
+    /// <returns></returns>
+    public IEnumerator WaitForSecs(float sec)
+    {
+        //dont let the player move while sleeping
+        GotoMouse.MenuOpen = true;
+        yield return new WaitForSeconds(sec);
+        sleepOverlay.SetActive(true);
+        yield return new WaitForSeconds(3);
+        sleepOverlay.SetActive(false);
+        scrollText.Text = "Refreshing! Although I lost some valuable time.";
+        scrollText.StartScrolling();
+
+        //add the delays here, totals to about 1 minute
+        TimeLeft -= 54.5f;
+
+        //let the player move again
+        GotoMouse.MenuOpen = false;
+
+    }
 }
 

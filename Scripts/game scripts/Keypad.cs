@@ -110,6 +110,7 @@ public class Keypad {
         if (presses == "072109")
         {
             sound.AccessGrantedAudio();
+            sound.ElectricDoorOpenAudio();
             presses = "";
             buttonPresses = 0;
             Player.KeypadSolved = true;

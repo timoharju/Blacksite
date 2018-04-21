@@ -62,19 +62,21 @@ public class MainController : MonoBehaviour
 
         //click to move sprite flip attempt
         if(mCharacter.position.x > posXhistory)
-        {   
+        {
             //check if prisoner is idle => not animating
-            if(character.sprite.name == "prisoner_idle")
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("idle"))
             {
                 anim.Play("walking", -1, 0f);
             }
+            
             
             character.flipX = false;
             sound.FootstepAudio();
         }
         if(mCharacter.position.x < posXhistory)
         {
-            if (character.sprite.name == "prisoner_idle")
+            //check if idle is playing
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("idle"))
             {
                 anim.Play("walking", -1, 0f);
             }
@@ -83,11 +85,18 @@ public class MainController : MonoBehaviour
             character.flipX = true;
             sound.FootstepAudio();
         }
+
         //go back to idle if the player is not moving
         if(GotoMouse.Move == false)
         {
-            anim.Play("idle", -1, 0f);
+            //check if idle is already playing
+            if (!(anim.GetCurrentAnimatorStateInfo(0).IsName("idle")))
+            {
+                anim.Play("idle", -1, 0f);
+            }
+            
         }
+        
         /*
         //"detect" room change and flip the sprite facing the right way -- the version below is much more smooth, but it can break I think
         if(mCharacter.position.x >= 295) // keep the coordinates same as returnPos and nextRoomPos (from gamecontroller) and it works

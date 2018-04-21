@@ -42,6 +42,9 @@ public class Rooms {
         set { this.previousRoom = value; }
     }
 
+    /// <summary>
+    /// get/set a special room
+    /// </summary>
     public Rooms SpecialRoom
     {
         get { return this.specialRoom; }
