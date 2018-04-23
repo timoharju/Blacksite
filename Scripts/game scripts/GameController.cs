@@ -58,6 +58,8 @@ public class GameController : MonoBehaviour
     private bool hasClogcleaner = false; //check if player has clog cleaner item in inventory
     private bool hasYellowkey = false; //check if player has this key in inventory
     private bool hasBluekey = false;
+    private int dragMarkEvent;
+    private bool dragEvent = false;
     
 
     //timer, if it reaches zero, game over
@@ -88,7 +90,8 @@ public class GameController : MonoBehaviour
     {
         //set timer
         TimeLeft = 480f;
-
+        dragMarkEvent = Random.Range(1, 4);
+        Debug.Log(dragMarkEvent + " dragN");
         //android settings
         Screen.orientation = ScreenOrientation.LandscapeLeft;
         //find game objects
@@ -101,8 +104,7 @@ public class GameController : MonoBehaviour
 
         paperFold = GameObject.Find("PaperFold");
         sleepOverlay = GameObject.Find("SleepOverlay");
-        //if this line gives errors make sure to enable SleepOverlay before you run the game!
-        sleepOverlay.SetActive(false);
+
         key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
         key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
         specialRoomExit = GameObject.Find("SpecialRoomExitButton").GetComponent<Button>();
@@ -188,6 +190,9 @@ public class GameController : MonoBehaviour
         player.SetScale(75); //set player default scale
         player.SetLocation(rooms[0]); //set player starting location
 
+        
+        StartCoroutine(WakingUpScreen());
+
     }
     /// <summary>
     /// use button state, true = pressed
@@ -252,6 +257,7 @@ public class GameController : MonoBehaviour
         
         
     }
+
     /// <summary>
     /// set using to false when you leave any trigger(just incase)
     /// more detailed explanation in OnTriggerEnter2D docs
@@ -376,10 +382,11 @@ public class GameController : MonoBehaviour
         rooms[8].SpecialRoom = rooms[6];
     }
 
-    
+
     // Update is called once per frame
     void Update()
     {
+        
         //timer stuff
         timerText.text = "" + (int)TimeLeft;
         TimeLeft -= Time.deltaTime;
@@ -549,6 +556,7 @@ public class GameController : MonoBehaviour
                 player.Position = new Vector3(280, -54, 100);
                 scrollText.Text = "I can't go that way.";
                 scrollText.StartScrolling();
+                sound.Mumble5Audio();
             }
 
             if (player.Location.PreviousRoom == null && colliderName == "RoomSwitchLeft")
@@ -557,6 +565,7 @@ public class GameController : MonoBehaviour
                 player.Position = new Vector3(-280, -54, 100);
                 scrollText.Text = "I can't go that way.";
                 scrollText.StartScrolling();
+                sound.Mumble5Audio();
             }
         }
     }
@@ -584,6 +593,7 @@ public class GameController : MonoBehaviour
             {
                 scrollText.Text = "It's locked.";
                 scrollText.StartScrolling();
+                sound.Mumble5Audio();
             }
 
         }
@@ -593,6 +603,7 @@ public class GameController : MonoBehaviour
         {
             scrollText.Text = "I think I can control some locks from there.";
             scrollText.StartScrolling();
+            sound.Mumble4shortAudio();
         }
 
         use = false;
@@ -651,6 +662,7 @@ public class GameController : MonoBehaviour
             StartCoroutine(lightsoffGame.WaitForSecs(1.5f));
             scrollText.Text = "Something unlocked.";
             scrollText.StartScrolling();
+            sound.Mumble5Audio();
         }
 
 
@@ -691,6 +703,7 @@ public class GameController : MonoBehaviour
             {
                 scrollText.Text = "It's locked.";
                 scrollText.StartScrolling();
+                sound.Mumble5Audio();
             }
             use = false;
         }
@@ -800,6 +813,7 @@ public class GameController : MonoBehaviour
                         scrollText.Text = "That's the key from my cell!";
                         scrollText.StartScrolling();
                         pipeGameTextEvent1 = false;
+                        sound.Mumble1Audio();
 
                     }
                 }
@@ -811,6 +825,7 @@ public class GameController : MonoBehaviour
                         scrollText.Text = "I think the pipes are clogged, nothing is coming out.";
                         scrollText.StartScrolling();
                         pipeGameTextEvent2 = false;
+                        sound.Mumble4Audio();
                     }
                 }
             }
@@ -818,27 +833,98 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// time wasting dialogue for the second room
+    /// alien kidnapping for the second room
     /// </summary>
     private void CellRoomTriggers()
     {
+        
         //check if you are near door 1
         if (colliderName == "Room2Door1" && use)
         {
-            scrollText.Text = "It's empty.";
-            scrollText.StartScrolling();
+            //check random roll
+            if(dragMarkEvent == 1)
+            {
+                //check if the alien has dragged you already
+                if (!dragEvent)
+                {
+                    scrollText.Text = "What is that?";
+                    scrollText.StartScrolling();
+                    dragEvent = true;
+                    StartCoroutine(MonsterEvent(1));
+                    sound.Mumble1shortAudio();
+                }
+                else
+                {
+                    scrollText.Text = "I better keep moving.";
+                    scrollText.StartScrolling();
+                    sound.Mumble1shortAudio();
+                }
+                
+            }
+            else
+            {
+                scrollText.Text = "It's empty.";
+                scrollText.StartScrolling();
+                sound.Mumble5Audio();
+            }
+            
         }
         //check if you are near door 2
         else if (colliderName == "Room2Door2" && use)
         {
-            scrollText.Text = "I think I saw something...                                     \n ...nevermind.";
-            scrollText.StartScrolling();
+            if(dragMarkEvent == 2)
+            {
+                if (!dragEvent)
+                {
+                    scrollText.Text = "What is that?";
+                    scrollText.StartScrolling();
+                    dragEvent = true;
+                    StartCoroutine(MonsterEvent(2));
+                    sound.Mumble1shortAudio();
+                }
+                else
+                {
+                    scrollText.Text = "I better keep moving.";
+                    scrollText.StartScrolling();
+                    sound.Mumble1shortAudio();
+                }
+            }
+            else
+            {
+                scrollText.Text = "I think I saw something...                                             \n ...nevermind.";
+                scrollText.StartScrolling();
+                sound.Mumble1Audio();
+                sound.Mumblegreat2Audio();
+            }
+            
         }
         //check if you are near door 3
         else if (colliderName == "Room2Door3" && use)
         {
-            scrollText.Text = "Nothing of value.";
-            scrollText.StartScrolling();
+            if(dragMarkEvent == 3)
+            {
+                if (!dragEvent)
+                {
+                    scrollText.Text = "What is that?";
+                    scrollText.StartScrolling();
+                    dragEvent = true;
+                    StartCoroutine(MonsterEvent(3));
+                    sound.Mumble1shortAudio();
+                }
+                else
+                {
+                    scrollText.Text = "I better keep moving.";
+                    scrollText.StartScrolling();
+                    sound.Mumble1shortAudio();
+                }
+            }
+            else
+            {
+                scrollText.Text = "Nothing of value.";
+                scrollText.StartScrolling();
+                sound.Mumble5Audio();
+            }
+
         }
         use = false; //toggle use last
     }
@@ -888,6 +974,7 @@ public class GameController : MonoBehaviour
             {
                 scrollText.Text = "I think the pipes might be clogged.";
                 scrollText.StartScrolling();
+                sound.Mumble3shortAudio();
             }
 
             //check if first use has been triggered
@@ -897,6 +984,9 @@ public class GameController : MonoBehaviour
                 scrollText.StartScrolling();
                 firstFlush = false;
                 key1Start.alpha = 0f;
+                sound.ObjectDropWaterAudio();
+                sound.Mumble2Audio();
+                sound.MumblegreatAudio();
             }
 
             //check if the player has clogcleaner and that first use has been triggered
@@ -905,14 +995,16 @@ public class GameController : MonoBehaviour
                 scrollText.Text = "Used the clog cleaner.";
                 scrollText.StartScrolling();
                 usedClog = true;
+                sound.Mumble5Audio();
             }
         }
-
+        //check if player is at the bed and pressed use
         if(colliderName == "BedCollider" && use)
         {
             scrollText.Text = "I guess I could take a nap.";
             scrollText.StartScrolling();
-            StartCoroutine(WaitForSecs(2.5f));
+            StartCoroutine(SleepEvent(2.5f));
+            sound.Mumble5Audio();
         }
 
         use = false; //toggle use last
@@ -940,13 +1032,16 @@ public class GameController : MonoBehaviour
             {
                 if (keyCount == 0)
                 {
-                    scrollText.Text = "The door is locked, there are two keyholes.\nIt's my way to freedom";
+                    scrollText.Text = "The door is locked, there are two keyholes.        \nIt's my way to freedom.";
                     scrollText.StartScrolling();
+                    sound.Mumble4shortAudio();
+                    sound.MumblegreatAudio();
                 }
                 else if(keyCount == 1)
                 {
                     scrollText.Text = "It needs a second key.";
                     scrollText.StartScrolling();
+                    sound.Mumble5Audio();
                 }
                 else if(keyCount == 2)
                 {
@@ -973,6 +1068,7 @@ public class GameController : MonoBehaviour
         {
             scrollText.Text = "I have no idea what I'm doing.";
             scrollText.StartScrolling();
+            sound.Mumble4shortAudio();
         }
         use = false;
     }
@@ -1136,12 +1232,14 @@ public class GameController : MonoBehaviour
             {
                 scrollText.Text = "The flesh has melted to a green puddle of goo.";
                 scrollText.StartScrolling();
+                sound.Mumble3Audio();
             }
             else//first use
             {
                 inventory.AddItem(itemPaperFold);
                 scrollText.Text = "There was a piece of paper in the aliens hand.";
                 scrollText.StartScrolling();
+                sound.Mumble1Audio();
             }
 
             use = false;
@@ -1183,16 +1281,17 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <param name="sec">time in seconds</param>
     /// <returns></returns>
-    public IEnumerator WaitForSecs(float sec)
+    public IEnumerator SleepEvent(float sec)
     {
         //dont let the player move while sleeping
         GotoMouse.MenuOpen = true;
         yield return new WaitForSeconds(sec);
         sleepOverlay.SetActive(true);
         yield return new WaitForSeconds(3);
-        sleepOverlay.SetActive(false);
+        StartCoroutine(WakingUpScreen());
         scrollText.Text = "Refreshing! Although I lost some valuable time.";
         scrollText.StartScrolling();
+        sound.Mumble4Audio();
 
         //add the delays here, totals to about 1 minute
         TimeLeft -= 54.5f;
@@ -1201,5 +1300,76 @@ public class GameController : MonoBehaviour
         GotoMouse.MenuOpen = false;
 
     }
+    
+    /// <summary>
+    /// monster kidnapping you in the second room
+    /// </summary>
+    /// <param name="sec"></param>
+    /// <returns></returns>
+    public IEnumerator MonsterEvent(int roomNumber)
+    {
+        Debug.Log("monster event");
+        //don't let the player move
+        GotoMouse.MenuOpen = true;
+        yield return new WaitForSeconds(2f);
+        //make the screen black
+        sleepOverlay.SetActive(true);
+
+        //decrease timer by 55 seconds, include waits and it totals to about 1 minute
+        TimeLeft -= 55;
+
+        //set dragmarks to room 1
+        rooms[0].RoomBackground = "room1_dragmarks";
+
+        //set the right dragmarks to room 2
+        if(roomNumber == 1)
+        {
+            rooms[1].RoomBackground = "room2_dragmarks_left";
+        }
+        else if(roomNumber == 2)
+        {
+            rooms[1].RoomBackground = "room2_dragmarks_middle";
+        }
+        else if(roomNumber == 3)
+        {
+            rooms[1].RoomBackground = "room2_dragmarks_right";
+        }
+        
+        //set player location and pos
+        player.SetLocation(player.PreviousLocation);
+        player.Position = startPos;
+        yield return new WaitForSeconds(3);
+        StartCoroutine(WakingUpScreen());
+        scrollText.Text = "What was that?";
+        scrollText.StartScrolling();
+        sound.Mumble4shortAudio();
+        //let player move again
+        GotoMouse.MenuOpen = false;
+        
+    }
+
+    /// <summary>
+    /// fade in black screen at the beginning of the game
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator WakingUpScreen()
+    {
+        //max alpha value
+        float alpha = 255;
+
+        //decrease alpha by a little rapidly so it looks like a smooth fade in
+        for(int i = 0; i < 100; i++)
+        {
+            //if this line gives you errors make sure to enable SleepOverlay before you start the game!!
+            sleepOverlay.GetComponent<Image>().color = new Color32(0, 0, 0, (byte)alpha);
+            alpha -= 2.55f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        //reset colors to normal
+        sleepOverlay.GetComponent<Image>().color = new Color32(0, 0, 0, 255);
+        sleepOverlay.SetActive(false);
+    }
+    
+   
 }
 
