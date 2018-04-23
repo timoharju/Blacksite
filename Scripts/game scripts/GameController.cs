@@ -12,14 +12,9 @@ public class GameController : MonoBehaviour
 
 
     private Rigidbody2D mCharacter;
-    private Vector3 roomLeftPos;
-    private Vector3 roomRightPos;
-    private Rigidbody2D leftPoint;
-    private Rigidbody2D rightPoint;
     private Button useButton;
     private Button inventoryButton;
     private ConsoleInput consoleInput;
-    private Sprite background;
     private Vector3 startPos;
     private Vector3 returnPos;
     private Vector3 nextRoomPos;
