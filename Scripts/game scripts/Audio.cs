@@ -25,6 +25,7 @@ public class Audio
     AudioSource audioMumble2;
     AudioSource audioMumble3;
     AudioSource audioMumble4;
+    AudioSource audioMumble5;
     AudioSource audioBlop;
     AudioSource audioAlienCreepy1;
     AudioSource audioAlienCreepy2;
@@ -32,6 +33,10 @@ public class Audio
     AudioSource audioObjectDropWater;
     AudioSource audioPaperCrumble;
     AudioSource audioNormalDoorOpen;
+    AudioSource audioMumblegreat;
+    AudioSource audioMumble4short;
+    AudioSource audioMumble3short;
+    AudioSource audioMumble1short;
 
     //checks if the audio has played
     bool hasPlayed = false;
@@ -61,6 +66,7 @@ public class Audio
         audioMumble2 = GameObject.Find("Mumble2").GetComponent<AudioSource>();
         audioMumble3 = GameObject.Find("Mumble3").GetComponent<AudioSource>();
         audioMumble4 = GameObject.Find("Mumble4").GetComponent<AudioSource>();
+        audioMumble5 = GameObject.Find("Mumble5").GetComponent<AudioSource>();
         audioBlop = GameObject.Find("Blop").GetComponent<AudioSource>();
         audioAlienCreepy1 = GameObject.Find("Aliencreepy1").GetComponent<AudioSource>();
         audioAlienCreepy2 = GameObject.Find("Aliencreepy2").GetComponent<AudioSource>();
@@ -68,6 +74,11 @@ public class Audio
         audioObjectDropWater = GameObject.Find("ObjectDropWater").GetComponent<AudioSource>();
         audioPaperCrumble = GameObject.Find("PaperCrumble").GetComponent<AudioSource>();
         audioNormalDoorOpen = GameObject.Find("NormalDoorOpen").GetComponent<AudioSource>();
+        audioMumblegreat = GameObject.Find("Mumblegreat").GetComponent<AudioSource>();
+        audioMumble4short = GameObject.Find("Mumble4short").GetComponent<AudioSource>();
+        audioMumble1short = GameObject.Find("Mumble1short").GetComponent<AudioSource>();
+        audioMumble3short = GameObject.Find("Mumble3short").GetComponent<AudioSource>();
+
 
     }
     public Audio()
@@ -99,6 +110,11 @@ public class Audio
         audioObjectDropWater = GameObject.Find("ObjectDropWater").GetComponent<AudioSource>();
         audioPaperCrumble = GameObject.Find("PaperCrumble").GetComponent<AudioSource>();
         audioNormalDoorOpen = GameObject.Find("NormalDoorOpen").GetComponent<AudioSource>();
+        audioMumblegreat = GameObject.Find("Mumblegreat").GetComponent<AudioSource>();
+        audioMumble4short = GameObject.Find("Mumble4short").GetComponent<AudioSource>();
+        audioMumble5 = GameObject.Find("Mumble5").GetComponent<AudioSource>();
+        audioMumble1short = GameObject.Find("Mumble1short").GetComponent<AudioSource>();
+        audioMumble3short = GameObject.Find("Mumble3short").GetComponent<AudioSource>();
     }
 
     //stops the audio
@@ -116,9 +132,9 @@ public class Audio
         {
             audioWaterdrop.Pause();
         }
-       
+
     }
-      
+
     //Plays the audio of the Footsteps01.wav
     public void FootstepAudio()
     {
@@ -138,7 +154,7 @@ public class Audio
             audioAmbient.Play();
         }
 
-        
+
     }
     //Plays the audio of the Open&Close(Metal Door).mp3
     public void MetalDoorAudio()
@@ -167,7 +183,7 @@ public class Audio
         {
             audioWaterdrop.Play();
         }
-        
+
     }
     //Plays the audio of the Waterdrop.mp3
     public void WaterdropLowAudio()
@@ -214,13 +230,13 @@ public class Audio
     public void ElectricDoorOpenAudio()
     {
 
-        if (hasPlayed==false)
+        if (hasPlayed == false)
         {
-            
+
             audioElectricDoorOpen.Play();
             hasPlayed = true;
         }
-     
+
     }
     //Plays the audio of the Control room.wav
     public void ControlRoomAudio()
@@ -243,7 +259,7 @@ public class Audio
     }
     public void Mumble2Audio()
     {
-        if (!audioMumble1.isPlaying)
+        if (!audioMumble2.isPlaying)
         {
             audioMumble2.Play();
         }
@@ -252,17 +268,17 @@ public class Audio
     }
     public void Mumble3Audio()
     {
-        if (!audioMumble1.isPlaying)
+        if (!audioMumble3.isPlaying)
         {
             audioMumble3.Play();
         }
-       
+
         //Mumble audio
 
     }
     public void Mumble4Audio()
     {
-        if (!audioMumble1.isPlaying)
+        if (!audioMumble4.isPlaying)
         {
             audioMumble4.Play();
         }
@@ -271,7 +287,7 @@ public class Audio
     }
     public void BlopAudio()
     {
-        if (!audioMumble1.isPlaying)
+        if (!audioBlop.isPlaying)
         {
             audioBlop.Play();
         }
@@ -328,10 +344,69 @@ public class Audio
         if (!audioNormalDoorOpen.isPlaying)
         {
             audioNormalDoorOpen.Play();
-            
+
+        }
+    }
+    public void MumblegreatAudio()
+    {
+        if (!audioMumblegreat.isPlaying)
+        {
+            audioMumblegreat.Play(88000);
+
+        }
+    }
+    public void Mumblegreat2Audio()
+    {
+        if (!audioMumblegreat.isPlaying)
+        {
+            audioMumblegreat.Play(132000);
+
+        }
+    }
+    public void Mumblegreat3Audio()
+    {
+        if (!audioMumblegreat.isPlaying)
+        {
+            audioMumblegreat.Play();
+
+        }
+    }
+    public void Mumble4shortAudio()
+    {
+        if (!audioMumble4short.isPlaying)
+        {
+            audioMumble4short.Play();
+
+        }
+    }
+    public void Mumble5Audio()
+    {
+        if (!audioMumble5.isPlaying)
+        {
+            audioMumble5.Play();
         }
 
+        //Mumble audio
+    }
+
+    public void Mumble1shortAudio()
+    {
+        if (!audioMumble1short.isPlaying)
+        {
+            audioMumble1short.Play();
+        }
 
     }
 
+    public void Mumble3shortAudio()
+    {
+        if (!audioMumble3short.isPlaying)
+        {
+            audioMumble3short.Play();
+        }
+
+    }
 }
+
+
+
