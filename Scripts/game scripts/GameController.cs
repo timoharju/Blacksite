@@ -39,6 +39,8 @@ public class GameController : MonoBehaviour
     private Text timerText;
     private GameObject paperFold;
     private GameObject sleepOverlay;
+    private GameObject pipePile;
+    private GameObject pipesFixed;
 
     private bool use = false; //use key
     private bool loop = false;//f2 menu loop
@@ -99,6 +101,8 @@ public class GameController : MonoBehaviour
 
         paperFold = GameObject.Find("PaperFold");
         sleepOverlay = GameObject.Find("SleepOverlay");
+        pipePile = GameObject.Find("Pipepile");
+        pipesFixed = GameObject.Find("PipesFixed");
 
         key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
         key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
@@ -738,6 +742,13 @@ public class GameController : MonoBehaviour
             
             use = false;
         }
+
+        //see if player wants to play the pipe game
+        if(colliderName == "Room9Pipes" && use)
+        {
+            pipegame.ShowGame();
+            use = false;
+        }
     }
 
     /// <summary>
@@ -775,20 +786,24 @@ public class GameController : MonoBehaviour
             {
                 key1Sewer.alpha = 0f;
             }
-            
 
-            //show the game if you are in the sewers
-            pipegame.ShowGame();
+
+            //show/hide pile of pipes and fixed pipes if player hasn't/has solved pipegame
+            bool showPipepile = (!Player.PipegameSolved) ? true : false;
+            pipePile.SetActive(showPipepile);
+            pipesFixed.SetActive(!showPipepile);
+            
 
             //dont interact with the pipes if you already won the game
             if (Player.PipegameSolved == true)
             {
-                pipegame.SetUninteractable();
+                pipegame.CloseGame();
             }
         }
         else //if player is not in the sewers
         {
-            pipegame.CloseGame();
+            pipePile.SetActive(false);
+            pipesFixed.SetActive(false);
             sewersFirstEntry = true; //set first entry back to true when you leave
             key1Sewer.alpha = 0f;
         }

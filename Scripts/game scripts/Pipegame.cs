@@ -11,7 +11,7 @@ public class Pipegame {
     private CanvasGroup pipeCanvasgroup;
     private Sprite pipeStraight;
     private Sprite pipeCurve;
-    private bool solved = false;
+
     /// <summary>
     /// find canvas, load sprites and setup buttons
     /// </summary>
@@ -25,6 +25,10 @@ public class Pipegame {
         GetButtons();
         //setup possible winning pattern
         SetupButtons();
+
+        //set game solved to false, not sure if autoproperty is false by default
+        Solved = false;
+
         //hide game by default
         CloseGame();
     }
@@ -189,7 +193,7 @@ public class Pipegame {
         //if all the right pipes are in position
         if(pipesInPosition == 17)
         {
-            solved = true;
+            Solved = true;
             pipeCanvasgroup.blocksRaycasts = false;
             Player.PipegameSolved = true;
         }
@@ -222,7 +226,7 @@ public class Pipegame {
         pipeCanvasgroup.alpha = 0f;
         pipeCanvasgroup.interactable = false;
         pipeCanvasgroup.blocksRaycasts = false;
-        
+        GotoMouse.MenuOpen = false;
 
     }
     /// <summary>
@@ -233,23 +237,12 @@ public class Pipegame {
         pipeCanvasgroup.alpha = 1f;
         pipeCanvasgroup.interactable = true;
         pipeCanvasgroup.blocksRaycasts = true;
+        GotoMouse.MenuOpen = true;
+    }
 
-    }
-    /// <summary>
-    /// set the game playable, actually setting .interactable to false makes it transparent a bit
-    /// </summary>
-    public void SetUninteractable()
-    {
-        pipeCanvasgroup.blocksRaycasts = false;
-        
-    }
     /// <summary>
     /// set or get bool to see if you have solved the game or not
     /// </summary>
-    public bool Solved
-    {
-        get { return this.solved; }
-        set { this.solved = value; }
-    }
+    private bool Solved { get; set; }
 
 }
