@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Minigames;
 /// <summary>
 /// Toggle a "console" type input field which takes plain text as commands,
 /// console is hidden by default!
