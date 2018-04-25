@@ -22,7 +22,7 @@ public class Player  {
     public Player(List<Rooms> roomList, Rigidbody2D mCharacter)
     {
         this.roomList = roomList;
-        this.location = roomList[0];
+        Location = roomList[0];
         this.mCharacter = mCharacter;
         keypadSolved = false;
         lightsoutSolved = false;

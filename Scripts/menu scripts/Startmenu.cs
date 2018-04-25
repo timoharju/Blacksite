@@ -52,7 +52,7 @@ public class Startmenu : MonoBehaviour {
     private void StartGame()
     {
         loadingCanvas.alpha = 1f;
-        SceneManager.LoadSceneAsync("newScene");
+        SceneManager.LoadSceneAsync("AdjustVignette");
     }
     /// <summary>
     /// show how to play instructions

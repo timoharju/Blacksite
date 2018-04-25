@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
 using UnityEngine.SceneManagement;
+using Minigames;
+using Menu;
 /// <summary>
 /// Used to control alot of the game, create objects for rooms, player, minigames, characters, menus
 /// </summary>
@@ -41,6 +43,7 @@ public class GameController : MonoBehaviour
     private GameObject sleepOverlay;
     private GameObject pipePile;
     private GameObject pipesFixed;
+    private Image vignette;
 
     private bool use = false; //use key
     private bool loop = false;//f2 menu loop
@@ -55,7 +58,7 @@ public class GameController : MonoBehaviour
     private bool hasClogcleaner = false; //check if player has clog cleaner item in inventory
     private bool hasYellowkey = false; //check if player has this key in inventory
     private bool hasBluekey = false;
-    private int dragMarkEvent;
+    private int dragMarkEvent; //random int, chooses where the alien is in room 2
     private bool dragEvent = false;
     
 
@@ -87,110 +90,57 @@ public class GameController : MonoBehaviour
     {
         //set timer
         TimeLeft = 480f;
+
+        //roll a random int for dragMarkEvent in room 2
         dragMarkEvent = Random.Range(1, 4);
-        Debug.Log(dragMarkEvent + " dragN");
+
         //android settings
         Screen.orientation = ScreenOrientation.LandscapeLeft;
-        //find game objects
-        mCharacter = GameObject.Find("MCharacter").GetComponent<Rigidbody2D>();
-        useButton = GameObject.Find("useButton").GetComponent<Button>();
-        positionCanvas = GameObject.Find("PositionCanvas").GetComponent<CanvasGroup>();
-        positionText = GameObject.Find("PositionText").GetComponent<Text>();
-        dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
-        inventoryButton = GameObject.Find("InventoryButton").GetComponent<Button>();
 
-        paperFold = GameObject.Find("PaperFold");
-        sleepOverlay = GameObject.Find("SleepOverlay");
-        pipePile = GameObject.Find("Pipepile");
-        pipesFixed = GameObject.Find("PipesFixed");
+        //find all of the GameObjects we need
+        FindGameObjects();
 
-        key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
-        key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
-        specialRoomExit = GameObject.Find("SpecialRoomExitButton").GetComponent<Button>();
-        clogCleaner = GameObject.Find("ClogCleaner").GetComponent<Button>();
-        yellowkey = GameObject.Find("YellowKey").GetComponent<Button>();
-        timerText = GameObject.Find("TimerText").GetComponent<Text>();
-
-        colliderList = new List<GameObject>();
-
-        colliderList.Add(room1 = GameObject.Find("Room1"));
-        colliderList.Add(room2 = GameObject.Find("Room2"));
-        colliderList.Add(room3 = GameObject.Find("Room3"));
-        colliderList.Add(room4 = GameObject.Find("Room4"));
-        colliderList.Add(room5 = GameObject.Find("Room5"));
-        colliderList.Add(room6 = GameObject.Find("Room6"));
-        colliderList.Add(room7 = GameObject.Find("Room7"));
-        colliderList.Add(room8 = GameObject.Find("Room8"));
-        colliderList.Add(room9 = GameObject.Find("Room9"));
-        
-        //turn all room colliders off by default, activate when inside a given room
-        foreach(GameObject obj in colliderList)
-        {
-            obj.SetActive(false);
-        }
-
-        //hide key in the sewers 
-        key1Sewer.alpha = 0f;
+        //create a list of room specific collider holders
+        CreateColliderList();
 
         //hide special room exit button by default, only show it in the special rooms
         specialRoomExit.gameObject.SetActive(true);
-        
 
-
-
-        //add listeners
-        useButton.onClick.AddListener(() => Use());
-        inventoryButton.onClick.AddListener(() => ToggleInventory());
-        specialRoomExit.onClick.AddListener(() => SpecialRoomExit());
-        clogCleaner.onClick.AddListener(() => CollectCleaner());
-        yellowkey.onClick.AddListener(() => CollectYellowKey());
-
+        //add listeners to buttons
+        AddonClickListeners();
 
         //create class objects
-        rooms = new List<Rooms>();
-        scrollText = new ScrollText();
-        keypad = new Keypad(scrollText);
-        inventory = new Inventory();
-        lightsoffGame = new LightsoffGame();
-        options = new Options();
-        pipegame = new Pipegame();
+        CreateClassObjects();
 
-        //send the games to ConsoleInput for the toggle commands
-        consoleInput = new ConsoleInput(lightsoffGame, pipegame);
-        
-        itemKeyYellow = new Item("keyYellow", "item_key");
-        itemClogcleaner = new Item("clogcleaner", "clog_cleaner");
-        itemKeyBlue = new Item("keyBlue", "item_key2");
-        itemPaperFold = new Item("paperFold", "paper_fold");
+        //create items we can pickup ingame
+        CreateItems();
 
         //create rooms and add to list
         CreateRooms();
 
-        //setup previous and next rooms
+        //setup room relations => previous/next and specialrooms
         SetupRooms();
 
 
+        //send the games to ConsoleInput for the toggle commands
+        consoleInput = new ConsoleInput(lightsoffGame, pipegame);
         //create player, give it a populated rooms list and the character
         player = new Player(rooms, mCharacter);
         //create audio object, pass the player to it because it uses some room locations as conditions
         sound = new Audio(player);
-
         //set a player for the consoleInput class, for some commands
         consoleInput.Player = player;
 
-        // room positions for character
-        startPos = new Vector3(-150, -54, 100);     
-        nextRoomPos = new Vector3(-280, -54, 100);  
-        returnPos = new Vector3(280, -54, 100);
 
-        
+        //setup player specific stuff, like starting location and scale
+        SetupPlayer();
 
-        //player.Position = startPos; // set player starting position
-        player.SetScale(75); //set player default scale
-        player.SetLocation(rooms[0]); //set player starting location
-
-        
+        //start waking up event
         StartCoroutine(WakingUpScreen());
+
+        //adjust vignette colors
+        vignette = GameObject.Find("Vignette").GetComponent<Image>();
+        vignette.color = new Color32(0, 0, 0, (byte)VignetteAdjuster.SliderValue);
 
     }
     /// <summary>
@@ -381,6 +331,108 @@ public class GameController : MonoBehaviour
         rooms[8].SpecialRoom = rooms[6];
     }
 
+    /// <summary>
+    /// create and add GameObjects which hold room specific colliders to a list
+    /// </summary>
+    private void CreateColliderList()
+    {
+        colliderList = new List<GameObject>();
+
+        colliderList.Add(room1 = GameObject.Find("Room1"));
+        colliderList.Add(room2 = GameObject.Find("Room2"));
+        colliderList.Add(room3 = GameObject.Find("Room3"));
+        colliderList.Add(room4 = GameObject.Find("Room4"));
+        colliderList.Add(room5 = GameObject.Find("Room5"));
+        colliderList.Add(room6 = GameObject.Find("Room6"));
+        colliderList.Add(room7 = GameObject.Find("Room7"));
+        colliderList.Add(room8 = GameObject.Find("Room8"));
+        colliderList.Add(room9 = GameObject.Find("Room9"));
+
+        //turn all room colliders off by default, activate when inside a given room with EnableColliders() method
+        foreach (GameObject obj in colliderList)
+        {
+            obj.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// find and get components of all the GameObjects we need
+    /// </summary>
+    private void FindGameObjects()
+    {
+        mCharacter = GameObject.Find("MCharacter").GetComponent<Rigidbody2D>();
+        useButton = GameObject.Find("useButton").GetComponent<Button>();
+        positionCanvas = GameObject.Find("PositionCanvas").GetComponent<CanvasGroup>();
+        positionText = GameObject.Find("PositionText").GetComponent<Text>();
+        dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
+        inventoryButton = GameObject.Find("InventoryButton").GetComponent<Button>();
+
+        paperFold = GameObject.Find("PaperFold");
+        sleepOverlay = GameObject.Find("SleepOverlay");
+        pipePile = GameObject.Find("Pipepile");
+        pipesFixed = GameObject.Find("PipesFixed");
+
+        key1Start = GameObject.Find("Key1StartCanvas").GetComponent<CanvasGroup>();
+        key1Sewer = GameObject.Find("Key1SewerCanvas").GetComponent<CanvasGroup>();
+        specialRoomExit = GameObject.Find("SpecialRoomExitButton").GetComponent<Button>();
+        clogCleaner = GameObject.Find("ClogCleaner").GetComponent<Button>();
+        yellowkey = GameObject.Find("YellowKey").GetComponent<Button>();
+        timerText = GameObject.Find("TimerText").GetComponent<Text>();
+    }
+
+    /// <summary>
+    /// add all the onClick listeners we need
+    /// </summary>
+    private void AddonClickListeners()
+    {
+        useButton.onClick.AddListener(() => Use());
+        inventoryButton.onClick.AddListener(() => ToggleInventory());
+        specialRoomExit.onClick.AddListener(() => SpecialRoomExit());
+        clogCleaner.onClick.AddListener(() => CollectCleaner());
+        yellowkey.onClick.AddListener(() => CollectYellowKey());
+    }
+
+    /// <summary>
+    /// create objects of all the classes we need
+    /// </summary>
+    private void CreateClassObjects()
+    {
+        rooms = new List<Rooms>();
+        scrollText = new ScrollText();
+        keypad = new Keypad(scrollText); //keypad uses some dialogue, pass scrollText to it
+        inventory = new Inventory();
+        lightsoffGame = new LightsoffGame();
+        options = new Options();
+        pipegame = new Pipegame();
+        
+    }
+
+    /// <summary>
+    /// create all the items we can pickup in the game
+    /// </summary>
+    private void CreateItems()
+    {
+        itemKeyYellow = new Item("keyYellow", "item_key");
+        itemClogcleaner = new Item("clogcleaner", "clog_cleaner");
+        itemKeyBlue = new Item("keyBlue", "item_key2");
+        itemPaperFold = new Item("paperFold", "paper_fold");
+    }
+
+    /// <summary>
+    /// set up all coordinates for room change positions
+    /// set player scale and starting location
+    /// </summary>
+    private void SetupPlayer()
+    {
+        // room positions for character, used when you change rooms
+        startPos = new Vector3(-150, -54, 100);
+        nextRoomPos = new Vector3(-280, -54, 100);
+        returnPos = new Vector3(280, -54, 100);
+
+        player.SetScale(75); //set player default scale
+        player.SetLocation(rooms[0]); //set player starting location
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -455,6 +507,10 @@ public class GameController : MonoBehaviour
 
         //events for the largeCellRoom
         LargeCellRoomEvents();
+
+        //adjust vignette in the sewers, otherwise it's too dark
+        AdjustVignette();
+
     }
     /// <summary>
     /// check if you are pressing any of the function keys
@@ -1291,7 +1347,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <param name="sec">time in seconds</param>
     /// <returns></returns>
-    public IEnumerator SleepEvent(float sec)
+    private IEnumerator SleepEvent(float sec)
     {
         //dont let the player move while sleeping
         GotoMouse.MenuOpen = true;
@@ -1316,7 +1372,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <param name="sec"></param>
     /// <returns></returns>
-    public IEnumerator MonsterEvent(int roomNumber)
+    private IEnumerator MonsterEvent(int roomNumber)
     {
         Debug.Log("monster event");
         //don't let the player move
@@ -1362,7 +1418,7 @@ public class GameController : MonoBehaviour
     /// fade in black screen at the beginning of the game
     /// </summary>
     /// <returns></returns>
-    public IEnumerator WakingUpScreen()
+    private IEnumerator WakingUpScreen()
     {
         //max alpha value
         float alpha = 255;
@@ -1378,6 +1434,16 @@ public class GameController : MonoBehaviour
         //reset colors to normal
         sleepOverlay.GetComponent<Image>().color = new Color32(0, 0, 0, 255);
         sleepOverlay.SetActive(false);
+    }
+
+    /// <summary>
+    /// adjust vignette color in the sewers, it's too dark otherwise
+    /// </summary>
+    private void AdjustVignette()
+    {
+        //if player is in the sewers reduce alpha by 50
+        float n = (player.LocationName == "sewers") ? (VignetteAdjuster.SliderValue - 50) : VignetteAdjuster.SliderValue;
+        vignette.color = new Color32(0, 0, 0, (byte)n);
     }
     
    
