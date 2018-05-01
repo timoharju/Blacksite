@@ -117,7 +117,10 @@ public class Audio
         audioMumble3short = GameObject.Find("Mumble3short").GetComponent<AudioSource>();
     }
 
-    //stops the audio
+    /// <summary>
+    /// Stops the audio if player is in specific location
+    /// </summary>
+
     public void stopAudio()
     {
         if (player.Location.RoomName != "controlRoom" && player.Location.RoomName != "securityDoor")
@@ -134,8 +137,11 @@ public class Audio
         }
 
     }
+    /// <summary>
+    ///  Plays the audio of the Footsteps01.wav
+    ///  Checks if the audio is playing so it doesn't overlap
+    /// </summary>
 
-    //Plays the audio of the Footsteps01.wav
     public void FootstepAudio()
     {
         //.Play(44000) for 0,5 sec delay
@@ -146,7 +152,11 @@ public class Audio
         }
 
     }
-    //Plays the audio of the Black_Site_AmbientMusic.ogg
+    /// <summary>
+    /// Plays the audio of the Black_Site_AmbientMusic.ogg
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void AmbientAudio()
     {
         if (!audioAmbient.isPlaying)
@@ -156,17 +166,29 @@ public class Audio
 
 
     }
-    //Plays the audio of the Open&Close(Metal Door).mp3
+
+    /// <summary>
+    /// Plays the audio of the Open&Close(Metal Door).mp3
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
     public void MetalDoorAudio()
     {
         audioMetalDoor.Play();
     }
-    //Plays the audio of the Walking on concrete.mp3
+    /// <summary>
+    /// Plays the audio of the Walking on concrete.mp3
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void ConcreteFootstepAudio()
     {
         audioConcreteWalk.Play();
     }
-    //Plays the audio of the PrisonCellDoor.mp3 and plays it once
+    /// <summary>
+    ///  Plays the audio of the PrisonCellDoor.mp3 
+    ///  Checks if the audio has played so it only plays once
+    /// </summary>
+
     public void PrisoncellDoorAudio()
     {
         if (hasPlayed == false)
@@ -176,7 +198,11 @@ public class Audio
         }
 
     }
-    //Plays the audio of the Waterdrop.mp3
+    /// <summary>
+    /// Plays the audio of the Waterdrop.mp3
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void WaterdropAudio()
     {
         if (!audioWaterdrop.isPlaying)
@@ -185,7 +211,11 @@ public class Audio
         }
 
     }
-    //Plays the audio of the Waterdrop.mp3
+    /// <summary>
+    /// Plays the audio of the Waterdrop.mp3
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void WaterdropLowAudio()
     {
         if (!audioWaterdropLow.isPlaying)
@@ -193,32 +223,53 @@ public class Audio
             audioWaterdropLow.Play();
         }
     }
-    //Plays the audio of the beep.ogg
+    /// <summary>
+    /// Plays the audio of the beep.ogg
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void BeepAudio()
     {
         audioBeep.Play();
     }
-    //Plays the audio of the acess granted.ogg
+    /// <summary>
+    /// Plays the audio of the acess granted.ogg
+    /// </summary>
+
     public void AccessGrantedAudio()
     {
         audioAccessGranted.Play();
     }
-    //Plays the audio of the AccessDenied1.wav
+    /// <summary>
+    /// Plays the audio of the AccessDenied1.wav
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void AccessDeniedAudio()
     {
         audioAccessDenied.Play();
     }
-    //Plays the audio of the InventoryOpen1.wav
+    /// <summary>
+    /// Plays the audio of the InventoryOpen1.wav
+    /// </summary>
+
     public void InventoryOpenAudio()
     {
         audioInventoryOpen.Play();
     }
-    //Plays the audio of the Walking on click.wav
+    /// <summary>
+    /// Plays the audio of the click.wav
+    /// </summary>
+
     public void InventoryClickAudio()
     {
         audioClick.Play();
     }
-    //Plays the audio of the Toilet flush.wav
+    /// <summary>
+    /// //Plays the audio of the Toilet flush.wav
+    /// Chekcs if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void ToiletFlushAudio()
     {
         if (!audioToiletFlush.isPlaying)
@@ -226,7 +277,11 @@ public class Audio
             audioToiletFlush.Play();
         }
     }
-    //Plays the audio of the electric_door_opening.wav and plays it once
+    /// <summary>
+    /// Plays the audio of the electric_door_opening.wav and plays it once
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void ElectricDoorOpenAudio()
     {
 
@@ -238,7 +293,11 @@ public class Audio
         }
 
     }
-    //Plays the audio of the Control room.wav
+    /// <summary>
+    /// Plays the audio of the Control room.wav
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+
     public void ControlRoomAudio()
     {
         if (!audioControlRoom.isPlaying)
@@ -246,7 +305,10 @@ public class Audio
             audioControlRoom.Play();
         }
 
-        //Mumble audio
+        /// <summary>
+        /// Plays the audio of the Mumble1.wav
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void Mumble1Audio()
     {
@@ -254,8 +316,10 @@ public class Audio
         {
             audioMumble1.Play();
         }
-
-        //Mumble audio
+        /// <summary>
+        /// Plays the audio of the Mumble2.wav
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void Mumble2Audio()
     {
@@ -264,7 +328,10 @@ public class Audio
             audioMumble2.Play();
         }
 
-        //Mumble audio
+        /// <summary>
+        /// Plays the audio of the Mumble3.wav
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void Mumble3Audio()
     {
@@ -273,7 +340,10 @@ public class Audio
             audioMumble3.Play();
         }
 
-        //Mumble audio
+        /// <summary>
+        /// Plays the audio of the Mumble4.wav
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
 
     }
     public void Mumble4Audio()
@@ -283,7 +353,10 @@ public class Audio
             audioMumble4.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the Blop.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void BlopAudio()
     {
@@ -292,7 +365,10 @@ public class Audio
             audioBlop.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the Aliencreepy1.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void AlienCreepy1Audio()
     {
@@ -301,7 +377,10 @@ public class Audio
             audioAlienCreepy1.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the Aliencreepy2.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void AlienCreepy2Audio()
     {
@@ -310,7 +389,10 @@ public class Audio
             audioAlienCreepy2.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the Aliencreepy3.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void AlienCreepy3Audio()
     {
@@ -319,7 +401,10 @@ public class Audio
             audioAlienCreepy3.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the ObjectDropWater.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void ObjectDropWaterAudio()
     {
@@ -328,7 +413,10 @@ public class Audio
             audioObjectDropWater.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the PaperCrumble.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void PaperCrumbleAudio()
     {
@@ -337,7 +425,10 @@ public class Audio
             audioPaperCrumble.Play();
         }
 
-
+        /// <summary>
+        /// Plays the audio of the NormalDoorOpen.wav
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void NormalDoorOpenAudio()
     {
@@ -346,6 +437,10 @@ public class Audio
             audioNormalDoorOpen.Play();
 
         }
+        /// <summary>
+        /// Plays the audio of the Mumblegreat.ogg
+        /// Checks if the audio is playing so it doesn't overlap
+        /// </summary>
     }
     public void MumblegreatAudio()
     {
@@ -355,6 +450,10 @@ public class Audio
 
         }
     }
+    /// <summary>
+    /// Plays the audio of the Mumblegreat.ogg
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
     public void Mumblegreat2Audio()
     {
         if (!audioMumblegreat.isPlaying)
@@ -362,7 +461,12 @@ public class Audio
             audioMumblegreat.Play(132000);
 
         }
+
     }
+    /// <summary>
+    /// Plays the audio of the Mumblegreat.ogg
+    /// Checks if the audio is playing os it doesn't overlap
+    /// </summary>
     public void Mumblegreat3Audio()
     {
         if (!audioMumblegreat.isPlaying)
@@ -371,6 +475,10 @@ public class Audio
 
         }
     }
+    /// <summary>
+    /// Plays the audio of the Mumble4short.ogg
+    /// Checks if the audio is playing os it doesn't overlap
+    /// </summary>
     public void Mumble4shortAudio()
     {
         if (!audioMumble4short.isPlaying)
@@ -379,6 +487,10 @@ public class Audio
 
         }
     }
+    /// <summary>
+    /// Plays the audio of the Mumble5.ogg
+    /// Checks if the audio is playing os it doesn't overlap
+    /// </summary>
     public void Mumble5Audio()
     {
         if (!audioMumble5.isPlaying)
@@ -386,9 +498,11 @@ public class Audio
             audioMumble5.Play();
         }
 
-        //Mumble audio
     }
-
+    /// <summary>
+    /// Plays the audio of the Mumble1short.ogg
+    /// Checks if the audio is playing os it doesn't overlap
+    /// </summary>
     public void Mumble1shortAudio()
     {
         if (!audioMumble1short.isPlaying)
@@ -397,7 +511,10 @@ public class Audio
         }
 
     }
-
+    /// <summary>
+    /// Plays the audio of the Mumble3short.ogg
+    /// Checks if the audio is playing os it doesn't overlap
+    /// </summary>
     public void Mumble3shortAudio()
     {
         if (!audioMumble3short.isPlaying)

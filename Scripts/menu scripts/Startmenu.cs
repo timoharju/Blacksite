@@ -15,11 +15,23 @@ public class Startmenu : MonoBehaviour {
     CanvasGroup instructionsCanvas;
     Button closeInstructions;
     Button leaderBoardButton;
+    /// <summary>
+    /// check if you loaded hiscore from the menu
+    /// </summary>
+    public static bool FromMenu { get; set; }
     
 	// Use this for initialization
 	void Start () {
         //android settings
         Screen.orientation = ScreenOrientation.Portrait;
+        //set loaded from menu to false by default
+        FromMenu = false;
+
+        //change menus if you are on the wrong platform
+        if(Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            SceneManager.LoadSceneAsync("ComputerMenu");
+        }
         //find buttons
         startgameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
         howtoPlayButton = GameObject.Find("HowtoPlayButton").GetComponent<Button>();
@@ -86,6 +98,7 @@ public class Startmenu : MonoBehaviour {
     /// </summary>
     private void LeaderBoards()
     {
+        FromMenu = true;
         SceneManager.LoadSceneAsync("HiScore");
     }
 }

@@ -47,8 +47,8 @@ public class Hiscore : MonoBehaviour {
         path = Application.dataPath + "/scores.txt";
         formatedPath = Application.dataPath + "/hiscore.txt";
         */
-        
-        //android version datapaths (works on pc too, %appdata%/LocalLow/DefaultCompany/Seikkailutime/hiscore.txt)
+
+        //android version datapaths (works on pc too, C:\Users\USER_NAME\AppData\LocalLow\DefaultCompany\Seikkailutime)
         path = Application.persistentDataPath + "/scores.txt";
         formatedPath = Application.persistentDataPath + "/hiscores.txt";
 
@@ -152,9 +152,26 @@ public class Hiscore : MonoBehaviour {
         hasEntered = true;
     }
 
+    /// <summary>
+    /// exit button functions, load the correct scene based on platform and if you progressed through the game or came from the main menus
+    /// </summary>
     private void ExitButtonClicked()
     {
-        SceneManager.LoadSceneAsync("Credits");
+        if (LoadSceneOnClick.FromMenu)
+        {
+            LoadSceneOnClick.FromMenu = false;
+            SceneManager.LoadSceneAsync("ComputerMenu");
+        }
+        else if (Startmenu.FromMenu)
+        {
+            Startmenu.FromMenu = false;
+            SceneManager.LoadSceneAsync("Startmenu");
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Credits");
+        }
+        
     }
 
     /// <summary>

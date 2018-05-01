@@ -12,6 +12,9 @@ public class GameOvermenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+        //android settings
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         retryButton = GameObject.Find("RetryButton").GetComponent<Button>();
         quitButton = GameObject.Find("QuitButton").GetComponent<Button>();
 

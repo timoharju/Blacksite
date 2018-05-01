@@ -12,6 +12,10 @@ public class CreditMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+        //android settings
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         exitbutton = GameObject.Find("ExitButton").GetComponent<Button>();
         clickCountText = GameObject.Find("ClickCountText").GetComponent<Text>();
 
@@ -21,7 +25,16 @@ public class CreditMenu : MonoBehaviour {
 	
     private void ClickToExit ()
     {
-        SceneManager.LoadSceneAsync("Startmenu");
+        
+        //load the correct scene depending on platform
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            SceneManager.LoadSceneAsync("Startmenu");
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("ComputerMenu");
+        }
     }
 
 	// Update is called once per frame

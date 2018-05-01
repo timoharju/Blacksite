@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Threading;
 /// <summary>
-/// Handles character movements and the sprite, plays footstep sounds
+/// Handles character animations and the sprite, plays footstep sounds
 /// </summary>
 public class MainController : MonoBehaviour
 {
@@ -35,32 +35,8 @@ public class MainController : MonoBehaviour
     // Update is called once per frame: f means float point type
     void Update()
     {
-        //anim
-        
-        //keyboard movement
-        if (Input.GetKey("d"))
-        {
-            mCharacter.transform.Translate(speed, 0, 0);
-            character.flipX = false;
-            sound.FootstepAudio();
-        }
-        if (Input.GetKey("a"))
-        {
-            mCharacter.transform.Translate(-speed, 0, 0);
-            character.flipX = true;
-            sound.FootstepAudio();
-        }
-        // up and down axis not intended at the moment
-        if (Input.GetKey("s"))
-        {
-            mCharacter.transform.Translate(0, -speed, 0);
-        }
-        if (Input.GetKey("w"))
-        {
-            mCharacter.transform.Translate(0, speed, 0);
-        }
 
-        //click to move sprite flip attempt
+        //click to move sprite flip
         if(mCharacter.position.x > posXhistory)
         {
             //check if prisoner is idle => not animating
