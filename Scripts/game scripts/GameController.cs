@@ -60,6 +60,7 @@ public class GameController : MonoBehaviour
     private bool hasBluekey = false;
     private int dragMarkEvent; //random int, chooses where the alien is in room 2
     private bool dragEvent = false;
+    private bool sleepEventRunning = false;
     
 
     //timer, if it reaches zero, game over
@@ -921,9 +922,13 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                    scrollText.Text = "I better keep moving.";
-                    scrollText.StartScrolling();
-                    sound.Mumble1shortAudio();
+                    //prevent overlapping dialogues
+                    if (scrollText.ThreadStatus)
+                    {
+                        scrollText.Text = "I better keep moving.";
+                        scrollText.StartScrolling();
+                        sound.Mumble1shortAudio();
+                    }
                 }
                 
             }
@@ -950,9 +955,13 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                    scrollText.Text = "I better keep moving.";
-                    scrollText.StartScrolling();
-                    sound.Mumble1shortAudio();
+                    //prevent overlapping dialogues
+                    if (scrollText.ThreadStatus)
+                    {
+                        scrollText.Text = "I better keep moving.";
+                        scrollText.StartScrolling();
+                        sound.Mumble1shortAudio();
+                    }
                 }
             }
             else
@@ -979,9 +988,13 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-                    scrollText.Text = "I better keep moving.";
-                    scrollText.StartScrolling();
-                    sound.Mumble1shortAudio();
+                    //prevent overlapping dialogues
+                    if (scrollText.ThreadStatus)
+                    {
+                        scrollText.Text = "I better keep moving.";
+                        scrollText.StartScrolling();
+                        sound.Mumble1shortAudio();
+                    }
                 }
             }
             else
@@ -1069,7 +1082,14 @@ public class GameController : MonoBehaviour
         {
             scrollText.Text = "I guess I could take a nap.";
             scrollText.StartScrolling();
-            StartCoroutine(SleepEvent(2.5f));
+            //prevent overlapping events
+            if (!sleepEventRunning)
+            {
+                sleepEventRunning = true;
+                StartCoroutine(SleepEvent(2.5f));
+
+            }
+            
             sound.Mumble5Audio();
         }
 
@@ -1111,7 +1131,7 @@ public class GameController : MonoBehaviour
                 }
                 else if(keyCount == 2)
                 {
-                    SceneManager.LoadSceneAsync("HiScore");
+                    SceneManager.LoadSceneAsync("EndingScene");
                 }
             }
             use = false;
@@ -1364,11 +1384,13 @@ public class GameController : MonoBehaviour
 
         //let the player move again
         GotoMouse.MenuOpen = false;
+        //mark event over
+        sleepEventRunning = false;
 
     }
     
     /// <summary>
-    /// monster kidnapping you in the second room
+    /// monster kidnapping you in the second room, takes door number as a parameter
     /// </summary>
     /// <param name="sec"></param>
     /// <returns></returns>

@@ -16,6 +16,7 @@ public class Inventory {
     private RawImage itemSlot4;
     private List<RawImage> itemSlots;
     private GameObject paperUnfold;
+    private GameObject clogCleanerItem;
 
     
     /// <summary>
@@ -27,9 +28,11 @@ public class Inventory {
         itemList = new List<Item>();
         inventoryCanvas = GameObject.Find("InventoryCanvas").GetComponent<CanvasGroup>();
         paperUnfold = GameObject.Find("PaperUnfold");
+        clogCleanerItem = GameObject.Find("ClogCleanerInspect");
         //hide unfolded paper screen
         //if this line gives you errors make sure the PaperUnfold -is active- when you start the game!! (otherwise it can't find the object)
         paperUnfold.SetActive(false);
+        clogCleanerItem.SetActive(false);
 
         itemSlots = new List<RawImage>();
         itemSlots.Add(itemSlot1 = GameObject.Find("ItemSlot1").GetComponent<RawImage>());
@@ -97,6 +100,7 @@ public class Inventory {
         inventoryCanvas.blocksRaycasts = false;
         //hide the paper when you close the inventory
         paperUnfold.SetActive(false);
+        clogCleanerItem.SetActive(false);
     }
 
     /// <summary>
@@ -129,16 +133,21 @@ public class Inventory {
     }
 
     /// <summary>
-    /// every item slot has a button, but we only care about the paper_fold button right now
-    /// but since it could be anywhere add listeners to all item slots, and let's find the paper fold by texture name
+    /// every item slot has a button, but we only care about the paper_fold and clog_cleaner buttons right now
+    /// but since they could be anywhere add listeners to all item slots, and let's find one of them by texture name
     /// </summary>
     /// <param name="button"></param>
     private void ItemClick(Button button)
     {
-        //get the buttons RawImage texture name... yeah not very elegant
+        //get the buttons RawImage texture name... pretty much the only way to tell them apart since the items can be in any order
         if(button.gameObject.GetComponent<RawImage>().texture.name == "paper_fold")
         {
             paperUnfold.SetActive(true);
+        }
+
+        if(button.gameObject.GetComponent<RawImage>().texture.name == "clog_cleaner")
+        {
+            clogCleanerItem.SetActive(true);
         }
     }
 }

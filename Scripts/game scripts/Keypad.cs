@@ -97,14 +97,19 @@ namespace Minigames
         /// <param name="button"></param>
         private void KeypadButtonClick(Button button)
         {
-
-            int whichButton;
-            int.TryParse(button.name, out whichButton);
-            presses += whichButton;
+            //add button name (which tells you the buttons number) to a string
+            presses += button.name;
             buttonPresses++; //track how many times you have pushed the buttons
             CheckCombination();
             sound.BeepAudio();
-            //Debug.Log("pressed " + whichButton);
+
+            // only compile this part if you are on android, it doesn't exist on windows version
+            #if UNITY_ANDROID
+            Handheld.Vibrate();
+            #endif
+            
+            
+            //Debug.Log("pressed " + button.name);
         }
         /// <summary>
         /// check the entered combination
