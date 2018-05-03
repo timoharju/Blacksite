@@ -21,6 +21,7 @@ public class CreditMenu : MonoBehaviour {
 
         exitbutton.onClick.AddListener(() => ClickToExit());
         clickCountText.text = "" + GotoMouse.numberOfClicks + " times.";
+        StartCoroutine(QuitAfterSeconds());
 	}
 	
     private void ClickToExit ()
@@ -41,4 +42,14 @@ public class CreditMenu : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    /// <summary>
+    /// credit scene timeout
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator QuitAfterSeconds()
+    {
+        yield return new WaitForSeconds(30f);
+        ClickToExit();
+    }
 }

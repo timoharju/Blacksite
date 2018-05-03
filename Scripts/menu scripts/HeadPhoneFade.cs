@@ -14,23 +14,19 @@ public class HeadPhoneFade : MonoBehaviour
     private IEnumerator WakingUpScreen()
     {
         //max alpha value
-        float alpha = 0;
+        float alpha = 255;
 
         //decrease alpha by a little rapidly so it looks like a smooth fade in
         for (int i = 0; i < 100; i++)
         {
             //if this line gives you errors make sure to enable SleepOverlay before you start the game!!
-            HeadPhoneImage.color = new Color32(255, 255, 255, (byte)alpha);
-            alpha += 2.55f;
+            HeadPhoneImage.color = new Color32(0, 0, 0, (byte)alpha);
+            alpha -= 2.55f;
             yield return new WaitForSeconds(0.02f);
 
         }
-        for (int i = 0; i < 100; i++)
-        {
-         
-            yield return new WaitForSeconds(0.08f);
 
-        }
+        yield return new WaitForSeconds(5f);
 
         if(Application.platform == RuntimePlatform.Android)
         {
@@ -45,7 +41,7 @@ public class HeadPhoneFade : MonoBehaviour
     }
     void Start()
     {
-        HeadPhoneImage = GameObject.Find("HeadphoneImage").GetComponent<RawImage>();
+        HeadPhoneImage = GameObject.Find("Overlay").GetComponent<RawImage>();
         StartCoroutine(WakingUpScreen());
         
 

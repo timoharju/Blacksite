@@ -77,16 +77,16 @@ namespace Minigames
             foreach (Button btn in btns)
             {
                 //Debug.Log(btn.name);
-                if (btn.image.sprite.name == "button_red")
-                {
-                    //Debug.Log(btn.image.sprite.name);
-                    btn.image.sprite = buttonYellow;
-
-                }
-                else if (btn.image.sprite.name == "button_yellow")
+                if (btn.image.sprite.name == "button_yellow")
                 {
                     //Debug.Log(btn.image.sprite.name);
                     btn.image.sprite = buttonRed;
+
+                }
+                else if (btn.image.sprite.name == "button_red")
+                {
+                    //Debug.Log(btn.image.sprite.name);
+                    btn.image.sprite = buttonYellow;
 
                 }
             }
@@ -98,13 +98,13 @@ namespace Minigames
         /// <param name="button"></param>
         private void ToggleClicked(Button button)
         {
-            if (button.image.sprite.name == "button_red")
-            {
-                button.image.sprite = buttonYellow;
-            }
-            else if (button.image.sprite.name == "button_yellow")
+            if (button.image.sprite.name == "button_yellow")
             {
                 button.image.sprite = buttonRed;
+            }
+            else if (button.image.sprite.name == "button_red")
+            {
+                button.image.sprite = buttonYellow;
             }
 
         }
@@ -113,16 +113,16 @@ namespace Minigames
         /// </summary>
         public void CheckWin()
         {
-            int numOfReds = 0;
+            int numOfYellows = 0;
             foreach (Button btn in buttons)
             {
-                if (btn.image.sprite.name == "button_red")
+                if (btn.image.sprite.name == "button_yellow")
                 {
-                    numOfReds++;
+                    numOfYellows++;
                 }
             }
             //Debug.Log("so close: " + numOfReds);
-            if (numOfReds == 25)
+            if (numOfYellows == 25)
             {
                 solved = true;
                 sound.AccessGrantedAudio(); //placeholder
@@ -243,11 +243,11 @@ namespace Minigames
                     btn.onClick.AddListener(() => ButtonClicked(btn));
                     if (j == 0 || j == 1 || j == 5 || j == 7 || j == 9 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 18 || j == 20 || j == 22 || j == 24)
                     {
-                        btn.image.sprite = buttonYellow;
+                        btn.image.sprite = buttonRed;
                     }
                     else
                     {
-                        btn.image.sprite = buttonRed;
+                        btn.image.sprite = buttonYellow;
                     }
 
                     j++;
@@ -260,11 +260,11 @@ namespace Minigames
                     btn.onClick.AddListener(() => ButtonClicked(btn));
                     if (j == 0 || j == 1 || j == 3 || j == 4 || j == 5 || j == 9 || j == 10 || j == 13 || j == 19 || j == 20 || j == 23)
                     {
-                        btn.image.sprite = buttonYellow;
+                        btn.image.sprite = buttonRed;
                     }
                     else
                     {
-                        btn.image.sprite = buttonRed;
+                        btn.image.sprite = buttonYellow;
                     }
 
                     j++;
@@ -277,11 +277,11 @@ namespace Minigames
                     btn.onClick.AddListener(() => ButtonClicked(btn));
                     if (j == 5 || j == 9 || j == 11 || j == 12 || j == 13 || j == 14 || j == 15 || j == 16 || j == 20 || j == 21 || j == 22 || j == 24)
                     {
-                        btn.image.sprite = buttonYellow;
+                        btn.image.sprite = buttonRed;
                     }
                     else
                     {
-                        btn.image.sprite = buttonRed;
+                        btn.image.sprite = buttonYellow;
                     }
 
                     j++;
