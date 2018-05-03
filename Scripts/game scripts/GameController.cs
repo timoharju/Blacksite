@@ -398,7 +398,6 @@ public class GameController : MonoBehaviour
     /// </summary>
     private void CreateClassObjects()
     {
-        rooms = new List<Rooms>();
         scrollText = new ScrollText();
         keypad = new Keypad(scrollText); //keypad uses some dialogue, pass scrollText to it
         inventory = new Inventory();
@@ -729,6 +728,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     private void CreateRooms()
     {
+        rooms = new List<Rooms>();
         //create rooms and add to list
         rooms.Add(new Rooms("start", "room1"));
         rooms.Add(new Rooms("cellRoom", "room2"));
@@ -919,6 +919,7 @@ public class GameController : MonoBehaviour
                     dragEvent = true;
                     StartCoroutine(MonsterEvent(1));
                     sound.Mumble1shortAudio();
+                    sound.AlienScreechAudio();
                 }
                 else
                 {
@@ -952,6 +953,7 @@ public class GameController : MonoBehaviour
                     dragEvent = true;
                     StartCoroutine(MonsterEvent(2));
                     sound.Mumble1shortAudio();
+                    sound.AlienScreechAudio();
                 }
                 else
                 {
@@ -966,7 +968,7 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                scrollText.Text = "I think I saw something...                                             \n ...nevermind.";
+                scrollText.Text = "I think I saw something...                                      \n...nevermind.";
                 scrollText.StartScrolling();
                 sound.Mumble1Audio();
                 sound.Mumblegreat2Audio();
@@ -985,6 +987,7 @@ public class GameController : MonoBehaviour
                     dragEvent = true;
                     StartCoroutine(MonsterEvent(3));
                     sound.Mumble1shortAudio();
+                    sound.AlienScreechAudio();
                 }
                 else
                 {
@@ -1049,11 +1052,31 @@ public class GameController : MonoBehaviour
         if (colliderName == "ToiletCollider" && use)
         {
             //check if you have triggered first use and that you don't have the cleaner yet
-            if (!firstFlush && !hasCleaner) 
+            //also check ThreadStatus to see if the other text event is still going on
+            if (!firstFlush && !hasCleaner && scrollText.ThreadStatus) 
             {
-                scrollText.Text = "I think the pipes might be clogged.";
+                if (usedClog)
+                {
+                    scrollText.Text = "The pipes should be unclogged now.";
+                    sound.ToiletFlushAudio();
+                }
+                else
+                {
+                    scrollText.Text = "I think the pipes might be clogged.";
+                }
                 scrollText.StartScrolling();
                 sound.Mumble3shortAudio();
+            }
+
+            //check if the player has clogcleaner and that first use has been triggered
+            if (hasCleaner && !firstFlush)
+            {
+                scrollText.Text = "Used the clog cleaner.";
+                scrollText.StartScrolling();
+                usedClog = true;
+                sound.Mumble5Audio();
+                //remove clogCleaner from the player
+                inventory.RemoveItem(itemClogcleaner);
             }
 
             //check if first use has been triggered
@@ -1068,14 +1091,7 @@ public class GameController : MonoBehaviour
                 sound.MumblegreatAudio();
             }
 
-            //check if the player has clogcleaner and that first use has been triggered
-            if (hasCleaner && !firstFlush)
-            {
-                scrollText.Text = "Used the clog cleaner.";
-                scrollText.StartScrolling();
-                usedClog = true;
-                sound.Mumble5Audio();
-            }
+            
         }
         //check if player is at the bed and pressed use
         if(colliderName == "BedCollider" && use)

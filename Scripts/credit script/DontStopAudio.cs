@@ -15,19 +15,22 @@ public class DontStopAudio : MonoBehaviour {
     /// Checks if there is an existing instance, if there already is, it destroys itself. 
     /// Otherwise it stores this instance, so later it can destroy itself again so it doesn't cause issues later.
     /// </summary>
-    void Awake()
+    private void Update()
     {
-
-        if (instance != null && instance != this)
+        if (SceneManager.GetActiveScene().name == "HiScore" || SceneManager.GetActiveScene().name == "Credits")
         {
-            Destroy(this.gameObject);
-            return;
+            DontDestroyOnLoad(this.gameObject);
+            instance = this;
         }
         else
         {
-            instance = this;
+            Destroy(this.gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
+        Debug.Log(SceneManager.GetActiveScene().name);
+
+
     }
+  
+
 }
  

@@ -17,6 +17,7 @@ public class EndingScene : MonoBehaviour {
     ScrollText scroll;
     CanvasGroup dialogue;
     Text dialogueText;
+    RawImage fadeoutImage;
 
     bool alienSpeech = false;
     bool goal = false;
@@ -34,14 +35,18 @@ public class EndingScene : MonoBehaviour {
         character = GameObject.Find("MCharacter").GetComponent<SpriteRenderer>();
         alienRay = GameObject.Find("AlienRay").GetComponent<Image>();
         dialogueText = GameObject.Find("DialogueText").GetComponent<Text>();
+        fadeoutImage = GameObject.Find("FadeoutOverlay").GetComponent<RawImage>();
         alienRay.gameObject.SetActive(false);
 
         sound = new Audio();
         scroll = new ScrollText();
+        scroll.HideDialogue();
         StartCoroutine(WalkToMiddle());
         targetX = new Vector3(0, transform.position.y, transform.position.z);
         targetY = new Vector3(0, 500f, transform.position.z);
-        
+        //make the fadeout overlay completely transparent
+        fadeoutImage.color = new Color32(0, 0, 0, 0);
+
     }
 
 
@@ -100,25 +105,29 @@ public class EndingScene : MonoBehaviour {
                 //sound.AlienCreepy1Audio();
                 alienSpeech = true;
                 alienRay.gameObject.SetActive(true);
+                StartCoroutine(FadeOut());
             }
             speed = 50f;
-            suck = true;
+            suck = true; //enable moving up event
         }
 
+        //check if we want to move the character upwards
         if (suck)
         {
             if (!suckTextEvent)
             {
+                /*
                 scroll.Text = "ded[ph]";
                 scroll.StartScrolling();
                 suckTextEvent = true;
+                */
             }
             
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("idle"))
             {
                 anim.Play("floating", -1, 0f);
             }
-            
+            //move player upwards (towards targetY)
             transform.position = Vector3.MoveTowards(transform.position, targetY, speed * Time.deltaTime);
         }
 
@@ -132,14 +141,29 @@ public class EndingScene : MonoBehaviour {
     /// add a small delay before you start walking
     /// </summary>
     /// <returns></returns>
-    IEnumerator WalkToMiddle()
+    private IEnumerator WalkToMiddle()
     {
-        Debug.Log("we go");
         yield return new WaitForSeconds(1);
-        scroll.Text = "Freedom![ph]";
+        scroll.Text = "Freedom!";
         scroll.StartScrolling();
         speed = 100;
-        
+    }
+
+    /// <summary>
+    /// fade the screen out at the end
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator FadeOut()
+    {
+        //after two seconds start fading the screen to black
+        int alpha = 0;
+        yield return new WaitForSeconds(2);
+        for(int i = 0; i<=5; i++)
+        {
+            alpha += 51;
+            fadeoutImage.color = new Color32(0, 0, 0, (byte)alpha);
+            yield return new WaitForSeconds(2);
+        }
         
     }
 }

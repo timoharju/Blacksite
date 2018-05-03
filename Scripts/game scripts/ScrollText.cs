@@ -44,7 +44,7 @@ public class ScrollText {
         for(int i = 0; i<source.Length; i++)
         {
             scrolling += source[i];
-            Thread.Sleep(37);
+            Thread.Sleep(40);
         }
         Thread.Sleep(readingTime);
         Finish();

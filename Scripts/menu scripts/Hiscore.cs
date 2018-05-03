@@ -301,7 +301,7 @@ public class Hiscore : MonoBehaviour {
         score -= clicks;
         
         //completing the game is atleast 1000 points
-        if(score < 1000 && score > 1)
+        if(score < 1000 && score > 1 && score > 0)
         {
             this.score = 1000;
             

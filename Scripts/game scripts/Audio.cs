@@ -37,6 +37,7 @@ public class Audio
     AudioSource audioMumble4short;
     AudioSource audioMumble3short;
     AudioSource audioMumble1short;
+    AudioSource audioAlienScreech;
 
     //checks if the audio has played
     bool hasPlayed = false;
@@ -78,6 +79,7 @@ public class Audio
         audioMumble4short = GameObject.Find("Mumble4short").GetComponent<AudioSource>();
         audioMumble1short = GameObject.Find("Mumble1short").GetComponent<AudioSource>();
         audioMumble3short = GameObject.Find("Mumble3short").GetComponent<AudioSource>();
+        audioAlienScreech = GameObject.Find("AlienScreech").GetComponent<AudioSource>();
 
 
     }
@@ -115,6 +117,7 @@ public class Audio
         audioMumble5 = GameObject.Find("Mumble5").GetComponent<AudioSource>();
         audioMumble1short = GameObject.Find("Mumble1short").GetComponent<AudioSource>();
         audioMumble3short = GameObject.Find("Mumble3short").GetComponent<AudioSource>();
+        audioAlienScreech = GameObject.Find("AlienScreech").GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -465,7 +468,7 @@ public class Audio
     }
     /// <summary>
     /// Plays the audio of the Mumblegreat.ogg
-    /// Checks if the audio is playing os it doesn't overlap
+    /// Checks if the audio is playing so it doesn't overlap
     /// </summary>
     public void Mumblegreat3Audio()
     {
@@ -477,7 +480,7 @@ public class Audio
     }
     /// <summary>
     /// Plays the audio of the Mumble4short.ogg
-    /// Checks if the audio is playing os it doesn't overlap
+    /// Checks if the audio is playing so it doesn't overlap
     /// </summary>
     public void Mumble4shortAudio()
     {
@@ -489,7 +492,7 @@ public class Audio
     }
     /// <summary>
     /// Plays the audio of the Mumble5.ogg
-    /// Checks if the audio is playing os it doesn't overlap
+    /// Checks if the audio is playing so it doesn't overlap
     /// </summary>
     public void Mumble5Audio()
     {
@@ -501,7 +504,7 @@ public class Audio
     }
     /// <summary>
     /// Plays the audio of the Mumble1short.ogg
-    /// Checks if the audio is playing os it doesn't overlap
+    /// Checks if the audio is playing so it doesn't overlap
     /// </summary>
     public void Mumble1shortAudio()
     {
@@ -513,13 +516,25 @@ public class Audio
     }
     /// <summary>
     /// Plays the audio of the Mumble3short.ogg
-    /// Checks if the audio is playing os it doesn't overlap
+    /// Checks if the audio is playing so it doesn't overlap
     /// </summary>
     public void Mumble3shortAudio()
     {
         if (!audioMumble3short.isPlaying)
         {
             audioMumble3short.Play();
+        }
+
+    }
+    /// <summary>
+    /// Plays the audio of the AlienScreech.ogg
+    /// Checks if the audio is playing so it doesn't overlap
+    /// </summary>
+    public void AlienScreechAudio()
+    {
+        if (!audioAlienScreech.isPlaying)
+        {
+            audioAlienScreech.PlayDelayed(1.7f);
         }
 
     }

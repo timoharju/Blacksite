@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Menu
 {
@@ -79,11 +80,18 @@ namespace Menu
             cheats.ShowCheats();
         }
         /// <summary>
-        /// close the game
+        /// return to mainmenu
         /// </summary>
         private void QuitApp()
         {
-            Application.Quit();
+            if(Application.platform == RuntimePlatform.Android)
+            {
+                SceneManager.LoadSceneAsync("Startmenu");
+            }
+            else
+            {
+                SceneManager.LoadSceneAsync("ComputerMenu");
+            }
         }
     }
 }
