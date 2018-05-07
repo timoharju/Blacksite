@@ -186,6 +186,15 @@ public class ConsoleInput {
             pipegame.ShowGame();
         }
         
+        if(command == "reducetime" || command == "rt")
+        {
+            GameController.TimeLeft -= 60;
+        }
+
+        if(command == "debugtime")
+        {
+            GameController.TimeLeft = 15;
+        }
     }
 
 }

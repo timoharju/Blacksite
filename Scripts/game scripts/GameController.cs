@@ -646,7 +646,7 @@ public class GameController : MonoBehaviour
             }
             else if (Player.KeypadSolved == false)
             {
-                scrollText.Text = "It's locked.";
+                scrollText.Text = "It's locked. \nThere is a keypad next to the door.";
                 scrollText.StartScrolling();
                 sound.Mumble5Audio();
             }
@@ -1058,7 +1058,7 @@ public class GameController : MonoBehaviour
                 if (usedClog)
                 {
                     scrollText.Text = "The pipes should be unclogged now.";
-                    sound.ToiletFlushAudio();
+                    
                 }
                 else
                 {
@@ -1075,6 +1075,7 @@ public class GameController : MonoBehaviour
                 scrollText.StartScrolling();
                 usedClog = true;
                 sound.Mumble5Audio();
+                sound.ToiletFlushAudio();
                 //remove clogCleaner from the player
                 inventory.RemoveItem(itemClogcleaner);
             }

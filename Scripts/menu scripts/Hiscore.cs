@@ -301,10 +301,15 @@ public class Hiscore : MonoBehaviour {
         score -= clicks;
         
         //completing the game is atleast 1000 points
-        if(score < 1000 && score > 1 && score > 0)
+        if(score < 1000 && score > 1)
         {
             this.score = 1000;
             
+        }
+        //dont let score go negative
+        if(score < 0)
+        {
+            this.score = 1000;
         }
 
         //if score is 0 dont let user enter anything
