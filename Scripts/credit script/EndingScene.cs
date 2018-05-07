@@ -164,6 +164,8 @@ public class EndingScene : MonoBehaviour {
             fadeoutImage.color = new Color32(0, 0, 0, (byte)alpha);
             yield return new WaitForSeconds(2);
         }
+        yield return new WaitForSeconds(2);
+        fadeoutImage.color = new Color32(0, 0, 0, (byte)255);
         
     }
 }
